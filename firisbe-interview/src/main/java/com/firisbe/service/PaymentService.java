@@ -37,6 +37,7 @@ public class PaymentService {
 	public void processPayment(@Valid PaymentRequestDTO paymentRequest) throws Exception {
 		// Fetch the card by cardNumber
 		Card card = cardRepository.findByCardNumber(paymentRequest.getCardNumber()).get(0);
+		System.out.println("card fetched in db is: "+ card.toString());
 		if (ObjectUtils.isEmpty(card)) {
 			throw new Exception("Card not found");
 		}
@@ -69,6 +70,7 @@ public class PaymentService {
 	private Payment prepareExternalRequest(PaymentRequestDTO paymentRequest, Card card) {
 		Payment payment = new Payment();
 		payment.setCard(card);
+		payment.setCardNumber(card.getCardNumber());
 		payment.setAmount(paymentRequest.getAmount());
 		payment.setPaymentDate(new Date());
 		return payment;

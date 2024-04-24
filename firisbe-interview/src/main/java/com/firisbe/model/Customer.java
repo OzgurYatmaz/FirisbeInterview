@@ -2,16 +2,15 @@ package com.firisbe.model;
 
 import java.util.List;
 
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 
 @Entity
@@ -19,19 +18,29 @@ public class Customer {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
+	private Integer id;
 	private String name;
 	private String email;
 
-	@OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, fetch = FetchType.LAZY) // so that customer_ıd column will be created in card table
-	@JsonIgnore // not needed to be returned in response 
+	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true) // so that customer_ıd column will be created in card
+	@JoinColumn(name = "customer_id") // This creates a foreign key column in the Card table
+	@JsonIgnore // not needed to be returned in response
 	private List<Card> cards;
 
-	public int getId() {
+	// No-argument constructor (for JPA)
+	public Customer() {
+	}
+
+	public Customer(String name, List<Card> cards) {
+        this.name = name;
+        this.cards = cards;
+    }
+	
+	public Integer getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 
@@ -51,12 +60,12 @@ public class Customer {
 		this.email = email;
 	}
 
-	@JsonIgnore //when records are fetched card info wont be visible
+	@JsonIgnore // when records are fetched card info wont be visible
 	public List<Card> getCards() {
 		return cards;
 	}
 
-	@JsonProperty//such that card field will be readable from request body
+	@JsonProperty // such that card field will be readable from request body
 	public void setCards(List<Card> cards) {
 		this.cards = cards;
 	}
@@ -66,5 +75,4 @@ public class Customer {
 		return "Customer [id=" + id + ", name=" + name + ", email=" + email + ", cards=" + cards + "]";
 	}
 
-	
 }

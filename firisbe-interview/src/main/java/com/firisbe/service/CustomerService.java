@@ -54,7 +54,7 @@ public class CustomerService {
 
 		List<Card> cards = new ArrayList<>();
 		Card defaultCard = new Card();
-		defaultCard.setCustomer(customer);
+	//	defaultCard.setCustomer(customer);
 		cards.add(defaultCard);
 		customer.setCards(cards);
 
