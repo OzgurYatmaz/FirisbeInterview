@@ -9,5 +9,7 @@ import com.firisbe.model.Card;
 public interface CardRepository extends JpaRepository<Card, Integer> {
 
 	List<Card> findByCardNumber(String cardNumber);
+	Boolean existsByCardNumber(String cardNumber);
+	
 
 }

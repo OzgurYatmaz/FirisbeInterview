@@ -8,5 +8,6 @@ import com.firisbe.model.Customer;
 
 public interface CustomerRepository extends JpaRepository<Customer, Integer> {
 
-    public List<Customer> findByEmail(String email);
+ //   public List<Customer> findByEmail(String email);
+    Boolean existsByEmail(String email);
 }
