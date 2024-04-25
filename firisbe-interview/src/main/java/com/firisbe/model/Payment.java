@@ -32,6 +32,8 @@ public class Payment {
 	public Payment() {
 	}
 
+	 
+
 	public Payment(double amount, String cardNumber, String customerNumber, LocalDateTime paymentDate, Card card) {
 		this.amount = amount;
 		this.cardNumber = cardNumber;
@@ -39,6 +41,8 @@ public class Payment {
 		this.paymentDate = paymentDate;
 		this.card = card;
 	}
+
+
 
 	public Card getCard() {
 		return card;
@@ -80,9 +84,13 @@ public class Payment {
 		this.paymentDate = paymentDate;
 	}
 
+
+
 	public String getCustomerNumber() {
 		return customerNumber;
 	}
+
+
 
 	public void setCustomerNumber(String customerNumber) {
 		this.customerNumber = customerNumber;

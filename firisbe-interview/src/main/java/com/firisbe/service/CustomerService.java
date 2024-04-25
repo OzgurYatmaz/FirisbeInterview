@@ -40,9 +40,10 @@ public class CustomerService {
 
 	}
 
-	public void addCustomer(Customer customer) throws Exception {
+	public Customer addCustomer(Customer customer) throws Exception {
 
 		// checks if email provided is already used for another customer
+		Customer savedCustomer = null;
 		if (!customerRepository.existsByEmail(customer.getEmail())) {
 
 			// if no card is specified with request body a default card will be assigned to
@@ -59,10 +60,12 @@ public class CustomerService {
 						e);
 				throw e;
 			}
-			customerRepository.save(customer);
+			savedCustomer = customerRepository.save(customer);
 		} else {
 			throw new Exception("Email provided is already exist");
 		}
+		
+		return savedCustomer;
 	}
 
 	private void assignADefaultCard(Customer customer) {
@@ -99,7 +102,7 @@ public class CustomerService {
 			throw new Exception("Following card numbers are already  used: " + nonUniquecardNumbers.toString());
 		}
 
-		//checks if there are any duplicate card numbers in the list  of carda
+		//checks if there are any duplicate card numbers in the list  of cards
 		areThereDuclicateEntriesForCardNumbers(dublicateChecker);
 
 	}

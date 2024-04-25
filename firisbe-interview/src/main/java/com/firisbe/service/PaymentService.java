@@ -93,7 +93,20 @@ public class PaymentService {
    
 
     public List<Payment> findPaymentsBySearchCriteria(String cardNumber, String customerNumber) {
-        return paymentRepository.findByCardNumberOrCustomerNumber(cardNumber, customerNumber);
+		List<Payment> payments = null;
+		System.out.println(cardNumber+", "+customerNumber);
+		if (cardNumber != null && customerNumber == null) {
+			payments = paymentRepository.findByCardNumberOrCustomerNumber(cardNumber, null);
+		} else if (customerNumber != null && cardNumber == null) {
+			payments = paymentRepository.findByCardNumberOrCustomerNumber(null, customerNumber);
+		} else if (customerNumber != null && cardNumber != null) {
+			payments = paymentRepository.findByCardNumberAndCustomerNumber(cardNumber, customerNumber);
+		} else {
+			// Both cardNumber and customerNumber are null, return an empty list or handle
+			payments = List.of();
+		}
+		
+		return payments;
     }
 
     

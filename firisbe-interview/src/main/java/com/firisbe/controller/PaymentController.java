@@ -2,8 +2,10 @@ package com.firisbe.controller;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -31,14 +33,17 @@ public class PaymentController {
 
 	@Operation(summary = "Make Payment", description = "Sends to payment request to payment service and records it to DB")
 	@PostMapping("/make-payment")
-	public String makePayment(@Valid @RequestBody PaymentRequestDTO paymentRequest) {
+	public ResponseEntity<String> makePayment(@Valid @RequestBody PaymentRequestDTO paymentRequest) {
 		try {
 			paymentService.processPayment(paymentRequest);
-			return "Payment is made";
+			return ResponseEntity.status(HttpStatus.OK)
+					.body("Payment is made ");
 
 		} catch (Exception e) {
-			return "Pament couldnot been made, error: " + e.getMessage();
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body("Failed to make payment. Error detail: " + e.getMessage());
 		}
+		
 	}
 
 	 
@@ -46,15 +51,8 @@ public class PaymentController {
 	@GetMapping("/payments")
 	public ResponseEntity<List<Payment>> getPaymentsBySearchCriteria(@RequestParam(required = false) String cardNumber,
 			@RequestParam(required = false) String customerNumber) {
-		List<Payment> payments;
-		if (cardNumber != null) {
-			payments = paymentService.findPaymentsBySearchCriteria(cardNumber, null);
-		} else if (customerNumber != null) {
-			payments = paymentService.findPaymentsBySearchCriteria(null, customerNumber);
-		} else {
-			// Both cardNumber and customerNumber are null, return an empty list or handle
-			payments = List.of();
-		}
+		List<Payment> payments = paymentService.findPaymentsBySearchCriteria(customerNumber, cardNumber);
+		payments.stream().forEach(s -> System.out.println(s.getAmount()));
 		return ResponseEntity.ok(payments);
 	}
 
