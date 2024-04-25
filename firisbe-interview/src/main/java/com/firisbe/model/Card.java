@@ -19,6 +19,7 @@ public class Card {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	private String cardNumber;
+	private String customerNumber;
 
 //	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
 //	@JoinColumn(name = "card_id") // This creates a foreign key column in the Payment table
@@ -30,10 +31,15 @@ public class Card {
 	public Card() {
 	}
 
-	public Card(String cardNumber, List<Payment> payments) {
+	 
+
+	public Card(String cardNumber, String customerNumber, List<Payment> payments) {
 		this.cardNumber = cardNumber;
+		this.customerNumber = customerNumber;
 		this.payments = payments;
 	}
+
+
 
 	public Integer getId() {
 		return id;
@@ -59,9 +65,25 @@ public class Card {
 		this.cardNumber = cardNumber;
 	}
 
+	
+	public String getCustomerNumber() {
+		return customerNumber;
+	}
+
+
+
+	public void setCustomerNumber(String customerNumber) {
+		this.customerNumber = customerNumber;
+	}
+
+
+
 	@Override
 	public String toString() {
 		return "Card [id=" + id + ", cardNumber=" + cardNumber + ", payments=" + payments + "]";
 	}
+
+
+ 
 
 }

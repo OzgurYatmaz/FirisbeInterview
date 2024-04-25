@@ -17,6 +17,7 @@ import com.firisbe.service.CustomerService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 
 @Tag(name = "Customer controller", description = "Add  and fetch customers")
 @RestController
@@ -28,7 +29,7 @@ public class CustomerController {
 
 	@Operation(summary = "Add customer", description = "Adds  new customer to our database")
 	@PostMapping("/add-customer")
-	public ResponseEntity<String> addCustomer(@RequestBody Customer customer) {
+	public ResponseEntity<String> addCustomer(@Valid @RequestBody Customer customer) {
 
 		try {
 			customerService.addCustomer(customer);
@@ -47,13 +48,8 @@ public class CustomerController {
 
 		List<Customer> allCustomers = customerService.getAllCustomers();
 
-		if (CollectionUtils.isEmpty(allCustomers)) {
-			// return "No customers is exist in DB";
-			return null;
-		} else {
-			return allCustomers;
-		}
-
+		return CollectionUtils.isEmpty(allCustomers) ? null : allCustomers;
+		
 	}
 
 }

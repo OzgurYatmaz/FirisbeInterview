@@ -12,6 +12,9 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 public class Customer {
@@ -20,6 +23,11 @@ public class Customer {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	private String name;
+	@NotNull(message = "Custmer  number cannot be null")
+	@NotBlank(message = "Customer Number may not be empty or blank")
+	private String customerNumber;
+	@NotNull(message = "Email cannot be null")
+	@Email(message = "Invalid email")
 	private String email;
 
 	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true) // so that customer_ıd column will be created in card
@@ -31,11 +39,13 @@ public class Customer {
 	public Customer() {
 	}
 
-	public Customer(String name, List<Card> cards) {
-        this.name = name;
-        this.cards = cards;
-    }
-	
+	public Customer(String name, String customerNumber, String email, List<Card> cards) {
+		this.name = name;
+		this.customerNumber = customerNumber;
+		this.email = email;
+		this.cards = cards;
+	}
+
 	public Integer getId() {
 		return id;
 	}
@@ -70,9 +80,18 @@ public class Customer {
 		this.cards = cards;
 	}
 
+	public String getCustomerNumber() {
+		return customerNumber;
+	}
+
+	public void setCustomerNumber(String customerNumber) {
+		this.customerNumber = customerNumber;
+	}
+
 	@Override
 	public String toString() {
-		return "Customer [id=" + id + ", name=" + name + ", email=" + email + ", cards=" + cards + "]";
+		return "Customer [id=" + id + ", name=" + name + ", customerNumber=" + customerNumber + ", email=" + email
+				+ ", cards=" + cards + "]";
 	}
 
 }

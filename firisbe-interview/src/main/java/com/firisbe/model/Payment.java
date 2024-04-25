@@ -1,6 +1,8 @@
 package com.firisbe.model;
 
-import java.util.Date;
+import java.time.LocalDateTime;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -8,8 +10,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
 
 @Entity
 public class Payment {
@@ -19,23 +19,25 @@ public class Payment {
 	private Integer id;
 	private double amount;
 	private String cardNumber;
+	private String customerNumber;
 
-	@Temporal(TemporalType.DATE)
-	private Date paymentDate;
+	private LocalDateTime paymentDate;
 
-	@ManyToOne//(fetch = FetchType.LAZY)
+	@ManyToOne
 	@JoinColumn(name = "card_id")
+	@JsonIgnore
 	private Card card;
 
 	// No-argument constructor (for JPA)
 	public Payment() {
 	}
 
-	public Payment(double amount, String cardNumber, Date paymentDate) {
-		super();
+	public Payment(double amount, String cardNumber, String customerNumber, LocalDateTime paymentDate, Card card) {
 		this.amount = amount;
 		this.cardNumber = cardNumber;
+		this.customerNumber = customerNumber;
 		this.paymentDate = paymentDate;
+		this.card = card;
 	}
 
 	public Card getCard() {
@@ -70,12 +72,20 @@ public class Payment {
 		this.amount = amount;
 	}
 
-	public Date getPaymentDate() {
+	public LocalDateTime getPaymentDate() {
 		return paymentDate;
 	}
 
-	public void setPaymentDate(Date paymentDate) {
+	public void setPaymentDate(LocalDateTime paymentDate) {
 		this.paymentDate = paymentDate;
+	}
+
+	public String getCustomerNumber() {
+		return customerNumber;
+	}
+
+	public void setCustomerNumber(String customerNumber) {
+		this.customerNumber = customerNumber;
 	}
 
 }

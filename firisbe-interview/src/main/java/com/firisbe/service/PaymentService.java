@@ -1,7 +1,10 @@
 package com.firisbe.service;
 
-import java.util.Date;
+import java.time.LocalDateTime;
+import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +27,9 @@ import jakarta.validation.Valid;
 @Validated
 public class PaymentService {
 
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(PaymentService.class);
+	
 	@Autowired
 	private PaymentRepository paymentRepository;
 
@@ -49,19 +55,17 @@ public class PaymentService {
 		try {
 			ResponseEntity<String> responseEntity = sendPaymentRequestToExternalService(paymentRequest);
 
-			// additional checks for payment result will be needed such as specific codes
-			// and messages of the response object
 			if (responseEntity.getStatusCode() == HttpStatus.OK) {
-				// I only record successful payments to DB for now.
+				// only  successful payments are saved to DB for now.
 				// Save the payment
 				paymentRepository.save(payment);
 				// You can also update other information like card balance here if needed
 				System.out.println("Payment processed successfully");
 			} else {
-				// Payment failed, you can throw an exception or handle it based on the response
 				throw new Exception("Response Code: " + responseEntity.getStatusCode() + ", Payment failed!");
 			}
 		} catch (Exception e) {
+			LOGGER.error("Error occurred while sending payment request to exteranal payment service: ", e);
 			throw new Exception("An error occured while accessing external paymnet service. Detail: " + e.getMessage());
 		}
 
@@ -72,7 +76,9 @@ public class PaymentService {
 		payment.setCard(card);
 		payment.setCardNumber(card.getCardNumber());
 		payment.setAmount(paymentRequest.getAmount());
-		payment.setPaymentDate(new Date());
+		LocalDateTime paymentTime = LocalDateTime.now(); 
+		payment.setPaymentDate(paymentTime);
+		payment.setCustomerNumber(card.getCustomerNumber());
 		return payment;
 	}
 
@@ -84,10 +90,11 @@ public class PaymentService {
 		return restTemplate.postForEntity(configParameters.getPaymentserviceurl(), externalRequest, String.class);
 	}
 
-	public void checkConfigParams(Payment payment) throws Exception {
+   
 
-		System.out.println(configParameters.getPaymentserviceurl());
-		System.out.println(configParameters.getClientsecret());
-	}
+    public List<Payment> findPaymentsBySearchCriteria(String cardNumber, String customerNumber) {
+        return paymentRepository.findByCardNumberOrCustomerNumber(cardNumber, customerNumber);
+    }
 
+    
 }
