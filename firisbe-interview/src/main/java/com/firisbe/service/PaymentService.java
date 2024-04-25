@@ -88,9 +88,16 @@ public class PaymentService {
 		return restTemplate.postForEntity(configParameters.getPaymentserviceurl(), externalRequest, String.class);
 	}
 
-	public List<Payment> findPaymentsBySearchCriteria(String cardNumber, String customerNumber) {
+	public List<Payment> findPaymentsBySearchCriteria(String cardNumber, String customerNumber) throws Exception {
 
-		return paymentRepository.findByCardNumberOrCustomerNumber(customerNumber, cardNumber);
+		 List<Payment> payments;
+		try {
+			payments = paymentRepository.findByCardNumberOrCustomerNumber(customerNumber, cardNumber);
+			return payments;
+		} catch (Exception e) {
+			LOGGER.error("Error occurred while fetching payment records from DB: ", e);
+			throw new Exception("Error occured while fetching payment records from DB; detail: "+e.getMessage());
+		} 
 	}
 
 }
