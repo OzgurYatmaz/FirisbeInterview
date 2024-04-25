@@ -2,31 +2,27 @@ package com.firisbe.model;
 
 import java.time.LocalDateTime;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 
 @Entity
+@Table(name = "payments")
 public class Payment {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	private double amount;
+	@Column(name="card_number")
 	private String cardNumber;
+	@Column(name="customer_number")
 	private String customerNumber;
 
 	private LocalDateTime paymentDate;
-
-	@ManyToOne
-	@JoinColumn(name = "card_id")
-	@JsonIgnore
-	private Card card;
 
 	// No-argument constructor (for JPA)
 	public Payment() {
@@ -34,23 +30,15 @@ public class Payment {
 
 	 
 
-	public Payment(double amount, String cardNumber, String customerNumber, LocalDateTime paymentDate, Card card) {
+	public Payment(double amount, String cardNumber, String customerNumber, LocalDateTime paymentDate) {
 		this.amount = amount;
 		this.cardNumber = cardNumber;
 		this.customerNumber = customerNumber;
 		this.paymentDate = paymentDate;
-		this.card = card;
 	}
 
 
 
-	public Card getCard() {
-		return card;
-	}
-
-	public void setCard(Card card) {
-		this.card = card;
-	}
 
 	public String getCardNumber() {
 		return cardNumber;

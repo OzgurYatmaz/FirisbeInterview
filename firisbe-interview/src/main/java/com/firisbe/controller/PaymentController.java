@@ -1,14 +1,10 @@
 package com.firisbe.controller;
 
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Stream;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -51,8 +47,7 @@ public class PaymentController {
 	@GetMapping("/payments")
 	public ResponseEntity<List<Payment>> getPaymentsBySearchCriteria(@RequestParam(required = false) String cardNumber,
 			@RequestParam(required = false) String customerNumber) {
-		List<Payment> payments = paymentService.findPaymentsBySearchCriteria(customerNumber, cardNumber);
-		payments.stream().forEach(s -> System.out.println(s.getAmount()));
+		List<Payment> payments = paymentService.findPaymentsBySearchCriteria(cardNumber, customerNumber);
 		return ResponseEntity.ok(payments);
 	}
 

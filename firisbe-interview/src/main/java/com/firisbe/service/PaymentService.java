@@ -24,12 +24,10 @@ import com.firisbe.repository.PaymentRepository;
 import jakarta.validation.Valid;
 
 @Service
-@Validated
 public class PaymentService {
 
-
 	private static final Logger LOGGER = LoggerFactory.getLogger(PaymentService.class);
-	
+
 	@Autowired
 	private PaymentRepository paymentRepository;
 
@@ -40,15 +38,16 @@ public class PaymentService {
 	private PaymentServiceConfig configParameters;
 
 	@Transactional
-	public void processPayment(@Valid PaymentRequestDTO paymentRequest) throws Exception {
+	public void processPayment(PaymentRequestDTO paymentRequest) throws Exception {
 		// Fetch the card by cardNumber
-		Card card = cardRepository.findByCardNumber(paymentRequest.getCardNumber()).get(0);
-		System.out.println("card fetched in db is: "+ card.toString());
-		if (ObjectUtils.isEmpty(card)) {
+		if (!cardRepository.existsByCardNumber(paymentRequest.getCardNumber())) {
 			throw new Exception("Card not found");
 		}
 
-		// create an object for external service's request body. This is just dummy example
+		Card card = cardRepository.findByCardNumber(paymentRequest.getCardNumber()).get(0);
+		
+		// create an object for external service's request body. This is just dummy
+		// example
 		Payment payment = prepareExternalRequest(paymentRequest, card);
 
 		// Call the external payment service
@@ -56,7 +55,7 @@ public class PaymentService {
 			ResponseEntity<String> responseEntity = sendPaymentRequestToExternalService(paymentRequest);
 
 			if (responseEntity.getStatusCode() == HttpStatus.OK) {
-				// only  successful payments are saved to DB for now.
+				// only successful payments are saved to DB for now.
 				// Save the payment
 				paymentRepository.save(payment);
 				// You can also update other information like card balance here if needed
@@ -73,10 +72,9 @@ public class PaymentService {
 
 	private Payment prepareExternalRequest(PaymentRequestDTO paymentRequest, Card card) {
 		Payment payment = new Payment();
-		payment.setCard(card);
 		payment.setCardNumber(card.getCardNumber());
 		payment.setAmount(paymentRequest.getAmount());
-		LocalDateTime paymentTime = LocalDateTime.now(); 
+		LocalDateTime paymentTime = LocalDateTime.now();
 		payment.setPaymentDate(paymentTime);
 		payment.setCustomerNumber(card.getCustomerNumber());
 		return payment;
@@ -90,24 +88,9 @@ public class PaymentService {
 		return restTemplate.postForEntity(configParameters.getPaymentserviceurl(), externalRequest, String.class);
 	}
 
-   
+	public List<Payment> findPaymentsBySearchCriteria(String cardNumber, String customerNumber) {
 
-    public List<Payment> findPaymentsBySearchCriteria(String cardNumber, String customerNumber) {
-		List<Payment> payments = null;
-		System.out.println(cardNumber+", "+customerNumber);
-		if (cardNumber != null && customerNumber == null) {
-			payments = paymentRepository.findByCardNumberOrCustomerNumber(cardNumber, null);
-		} else if (customerNumber != null && cardNumber == null) {
-			payments = paymentRepository.findByCardNumberOrCustomerNumber(null, customerNumber);
-		} else if (customerNumber != null && cardNumber != null) {
-			payments = paymentRepository.findByCardNumberAndCustomerNumber(cardNumber, customerNumber);
-		} else {
-			// Both cardNumber and customerNumber are null, return an empty list or handle
-			payments = List.of();
-		}
-		
-		return payments;
-    }
+		return paymentRepository.findByCardNumberOrCustomerNumber(customerNumber, cardNumber);
+	}
 
-    
 }

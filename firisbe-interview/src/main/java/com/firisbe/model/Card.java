@@ -1,18 +1,13 @@
 package com.firisbe.model;
 
-import java.util.List;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 
 @Entity
+@Table(name = "cards")
 public class Card {
 
 	@Id
@@ -21,11 +16,6 @@ public class Card {
 	private String cardNumber;
 	private String customerNumber;
 
-//	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-//	@JoinColumn(name = "card_id") // This creates a foreign key column in the Payment table
-	@OneToMany(mappedBy = "card", cascade = CascadeType.ALL, orphanRemoval = true)
-	@JsonIgnore // not needed to be returned in response
-	private List<Payment> payments;
 
 	// No-argument constructor (for JPA)
 	public Card() {
@@ -33,10 +23,9 @@ public class Card {
 
 	 
 
-	public Card(String cardNumber, String customerNumber, List<Payment> payments) {
+	public Card(String cardNumber, String customerNumber) {
 		this.cardNumber = cardNumber;
 		this.customerNumber = customerNumber;
-		this.payments = payments;
 	}
 
 
@@ -48,14 +37,7 @@ public class Card {
 	public void setId(Integer id) {
 		this.id = id;
 	}
-
-	public List<Payment> getPayments() {
-		return payments;
-	}
-
-	public void setPayments(List<Payment> payments) {
-		this.payments = payments;
-	}
+ 
 
 	public String getCardNumber() {
 		return cardNumber;
@@ -76,12 +58,7 @@ public class Card {
 		this.customerNumber = customerNumber;
 	}
 
-
-
-	@Override
-	public String toString() {
-		return "Card [id=" + id + ", cardNumber=" + cardNumber + ", payments=" + payments + "]";
-	}
+ 
 
 
  
