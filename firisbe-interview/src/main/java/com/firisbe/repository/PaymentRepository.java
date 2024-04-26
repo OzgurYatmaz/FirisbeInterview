@@ -8,9 +8,6 @@ import org.springframework.data.repository.query.Param;
 
 import com.firisbe.model.Payment;
 
-import org.springframework.stereotype.Repository;
-
-@Repository
 public interface PaymentRepository extends JpaRepository<Payment, Integer> {
 
 	@Query(value = "SELECT * from payments as p where  "
