@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.firisbe.error.ErrorDetails;
 import com.firisbe.model.Payment;
 import com.firisbe.model.PaymentRequestDTO;
 import com.firisbe.service.PaymentService;
@@ -21,7 +20,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
-@Tag(name = "Payment controller", description = "Make  and monitor payments") // For Swagger
+@Tag(name = "Payment controller", description = "Make  and query payments") // For Swagger
 @RestController
 @RequestMapping("/transactions")
 public class PaymentController {

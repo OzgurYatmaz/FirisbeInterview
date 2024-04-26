@@ -10,6 +10,9 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+
+import com.firisbe.error.RecordCouldNotBeSavedException;
+import com.firisbe.error.RecordsNotBeingFetchedException;
 import com.firisbe.model.Card;
 import com.firisbe.model.Customer;
 import com.firisbe.repository.CardRepository;
@@ -29,13 +32,13 @@ public class CustomerService {
 	@Autowired
 	private CardRepository cardRepository;
 
-	public List<Customer> getAllCustomers() {
+	public List<Customer> getAllCustomers() throws Exception {
 		try {
 			List<Customer> customers = customerRepository.findAll();
 			return customers;
 		} catch (Exception e) {
 			LOGGER.error("Error occurred while retrieving customers", e);
-			throw e;
+			throw new RecordsNotBeingFetchedException("Error occurred while retrieving customers. Details: "+e.getMessage());
 		}
 
 	}
@@ -60,7 +63,13 @@ public class CustomerService {
 						e);
 				throw e;
 			}
-			savedCustomer = customerRepository.save(customer);
+			try {
+				savedCustomer = customerRepository.save(customer);
+			} catch (Exception e) {
+				LOGGER.error("Error occurred while saving the customer to data base, detail: " + e.getMessage(),
+						e);
+				throw new RecordCouldNotBeSavedException("Error occurred while saving the customer to data base, detail: " + e.getMessage());
+			}
 		} else {
 			throw new Exception("Email provided is already exist");
 		}

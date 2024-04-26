@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
 import com.firisbe.model.Customer;
 import com.firisbe.service.CustomerService;
 
@@ -28,15 +29,15 @@ public class CustomerController {
 
 	@Operation(summary = "Add customer", description = "Adds  new customer to our database")
 	@PostMapping("/add-customer")
-	public ResponseEntity<String> addCustomer(@Valid @RequestBody Customer customer) {
+	public ResponseEntity<String> addCustomer(@Valid @RequestBody Customer customer) throws Exception {
 
 		Customer addedCustomer = null;
+		
 		try {
 			addedCustomer = customerService.addCustomer(customer);
 
 		} catch (Exception e) {
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-					.body("Failed to add customer. Error detail: " + e.getMessage());
+			throw e;
 		}
 
 		return ResponseEntity.status(HttpStatus.CREATED)
@@ -45,9 +46,15 @@ public class CustomerController {
 
 	@Operation(summary = "Fetch all customers", description = "Fetches all customers exist in our database")
 	@GetMapping("/get-all-customers")
-	public List<Customer> getAllCustomers() {
+	public List<Customer> getAllCustomers() throws Exception {
 
-		List<Customer> allCustomers = customerService.getAllCustomers();
+		List<Customer> allCustomers = null;
+
+		try {
+			allCustomers = customerService.getAllCustomers();
+		} catch (Exception e) {
+			throw e;
+		}
 
 		return CollectionUtils.isEmpty(allCustomers) ? null : allCustomers;
 
