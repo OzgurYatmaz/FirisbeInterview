@@ -11,11 +11,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.firisbe.error.ErrorDetails;
 import com.firisbe.model.Payment;
 import com.firisbe.model.PaymentRequestDTO;
 import com.firisbe.service.PaymentService;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
@@ -27,7 +32,12 @@ public class PaymentController {
 	@Autowired
 	public PaymentService paymentService;
 
-	@Operation(summary = "Make Payment", description = "Sends to payment request to payment service and records it to DB")
+	@Operation(summary = "Make Payment", description = "Sends payment request to external payment service and records the paymet details")
+	@ApiResponses({
+		@ApiResponse(responseCode = "200", description = "When payment is made succesfully"),
+		@ApiResponse(responseCode = "500", description = "When external payment service provider retuning diffrent code implying unsucessfull payment", content = { @Content(schema = @Schema(implementation = ErrorDetails.class)) }),
+		@ApiResponse(responseCode = "502", description = "When external payment service provider fail in completing the payment", content = { @Content(schema = @Schema(implementation = ErrorDetails.class)) })
+	  })
 	@PostMapping("/make-payment")
 	public ResponseEntity<String> makePayment(@Valid @RequestBody PaymentRequestDTO paymentRequest) throws Exception {
 		try {
