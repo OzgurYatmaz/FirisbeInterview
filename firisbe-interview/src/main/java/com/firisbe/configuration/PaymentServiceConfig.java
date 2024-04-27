@@ -8,33 +8,21 @@ import org.springframework.stereotype.Component;
 public class PaymentServiceConfig {
 
 	private String paymentserviceurl;
-
-	// for sample purpose these can be as many as needed
-	private String clientid;
-	private String clientsecret;
-
+	private int timeout;
+	
 	public String getPaymentserviceurl() {
 		return paymentserviceurl;
 	}
-
 	public void setPaymentserviceurl(String paymentserviceurl) {
 		this.paymentserviceurl = paymentserviceurl;
 	}
-
-	public String getClientid() {
-		return clientid;
+	public int getTimeout() {
+		return timeout;
 	}
-
-	public void setClientid(String clientid) {
-		this.clientid = clientid;
+	public void setTimeout(int timeout) {
+		this.timeout = timeout;
 	}
-
-	public String getClientsecret() {
-		return clientsecret;
-	}
-
-	public void setClientsecret(String clientsecret) {
-		this.clientsecret = clientsecret;
-	}
+	 
+	
 
 }

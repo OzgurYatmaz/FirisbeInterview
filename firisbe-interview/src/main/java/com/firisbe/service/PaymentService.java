@@ -1,27 +1,30 @@
 package com.firisbe.service;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
-
+import org.apache.commons.lang3.ObjectUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.ObjectUtils;
-import org.springframework.validation.annotation.Validated;
+import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 
 import com.firisbe.configuration.PaymentServiceConfig;
+import com.firisbe.error.ExternalServiceException;
+import com.firisbe.error.PaymentServiceProviderException;
+import com.firisbe.error.RecordsNotBeingFetchedException;
+import com.firisbe.error.RecordsNotExistException;
 import com.firisbe.model.Card;
 import com.firisbe.model.Payment;
 import com.firisbe.model.PaymentRequestDTO;
 import com.firisbe.repository.CardRepository;
 import com.firisbe.repository.PaymentRepository;
-
-import jakarta.validation.Valid;
 
 @Service
 public class PaymentService {
@@ -38,22 +41,38 @@ public class PaymentService {
 	private PaymentServiceConfig configParameters;
 
 	@Transactional
-	public void processPayment(PaymentRequestDTO paymentRequest) throws Exception {
+	public void processPayment(PaymentRequestDTO paymentRequest) throws ExternalServiceException {
 		// Fetch the card by cardNumber
 		if (!cardRepository.existsByCardNumber(paymentRequest.getCardNumber())) {
-			throw new Exception("Card not found");
+			throw new RecordsNotExistException("Card not found",
+					"Card number " + paymentRequest.getCardNumber() + " is not associated with any card");
 		}
 
 		Card card = cardRepository.findByCardNumber(paymentRequest.getCardNumber()).get(0);
-		
+
 		// create an object for external service's request body. This is just dummy
-		// example
 		Payment payment = prepareExternalRequest(paymentRequest, card);
 
-		// Call the external payment service
+		ResponseEntity<String> responseEntity = null;
 		try {
-			ResponseEntity<String> responseEntity = sendPaymentRequestToExternalService(paymentRequest);
 
+			// Call the external payment service
+			responseEntity = sendPaymentRequestToExternalService(paymentRequest);
+
+		} catch (ResourceAccessException ex) {
+
+			LOGGER.error("Error occurred while accessing external payment service", ex);
+			throw new PaymentServiceProviderException("An error occured while accessing external payment service",
+					ex.getMessage());
+
+		}
+
+		processExternalResponse(payment, responseEntity);
+	}
+
+	private void processExternalResponse(Payment payment, ResponseEntity<String> responseEntity)
+			throws ExternalServiceException {
+		if (ObjectUtils.isNotEmpty(responseEntity)) {
 			if (responseEntity.getStatusCode() == HttpStatus.OK) {
 				// only successful payments are saved to DB for now.
 				// Save the payment
@@ -61,13 +80,11 @@ public class PaymentService {
 				// You can also update other information like card balance here if needed
 				System.out.println("Payment processed successfully");
 			} else {
-				throw new Exception("Response Code: " + responseEntity.getStatusCode() + ", Payment failed!");
+				LOGGER.error("Payment response received indicates the failure of payment: ");
+				throw new ExternalServiceException("Response Code: " + responseEntity.getStatusCode(),
+						"Payment failed!");
 			}
-		} catch (Exception e) {
-			LOGGER.error("Error occurred while sending payment request to exteranal payment service: ", e);
-			throw new Exception("An error occured while accessing external paymnet service. Detail: " + e.getMessage());
 		}
-
 	}
 
 	private Payment prepareExternalRequest(PaymentRequestDTO paymentRequest, Card card) {
@@ -81,23 +98,35 @@ public class PaymentService {
 	}
 
 	private ResponseEntity<String> sendPaymentRequestToExternalService(PaymentRequestDTO externalRequest) {
-		// Here you would send the payment request to an external service
-		// This is just a dummy example
 
-		RestTemplate restTemplate = new RestTemplate();
-		return restTemplate.postForEntity(configParameters.getPaymentserviceurl(), externalRequest, String.class);
+		System.out.println("timeout: " + configParameters.getTimeout());
+		RestTemplateBuilder restTemplateBuilder = new RestTemplateBuilder();
+		RestTemplate restTemplate = restTemplateBuilder
+				.setConnectTimeout(Duration.ofMillis(configParameters.getTimeout()))
+				.setReadTimeout(Duration.ofMillis(configParameters.getTimeout())).build();
+
+		try {
+			ResponseEntity<String> externalResponse = restTemplate
+					.postForEntity(configParameters.getPaymentserviceurl(), externalRequest, String.class);
+			return externalResponse;
+		} catch (Exception e) {
+			LOGGER.error("Error while sending request to external payment service provider: ", e);
+			throw new ExternalServiceException("Error while sending request to external payment service provider",
+					e.getMessage());
+		}
 	}
 
 	public List<Payment> findPaymentsBySearchCriteria(String cardNumber, String customerNumber) throws Exception {
 
-		 List<Payment> payments;
+		List<Payment> payments;
 		try {
 			payments = paymentRepository.findByCardNumberOrCustomerNumber(customerNumber, cardNumber);
 			return payments;
 		} catch (Exception e) {
 			LOGGER.error("Error occurred while fetching payment records from DB: ", e);
-			throw new Exception("Error occured while fetching payment records from DB; detail: "+e.getMessage());
-		} 
+			throw new RecordsNotBeingFetchedException("Error occured while fetching payment records from DB",
+					e.getMessage());
+		}
 	}
 
 }

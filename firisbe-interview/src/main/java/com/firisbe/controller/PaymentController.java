@@ -1,6 +1,5 @@
 package com.firisbe.controller;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -30,27 +29,26 @@ public class PaymentController {
 
 	@Operation(summary = "Make Payment", description = "Sends to payment request to payment service and records it to DB")
 	@PostMapping("/make-payment")
-	public ResponseEntity<String> makePayment(@Valid @RequestBody PaymentRequestDTO paymentRequest) {
+	public ResponseEntity<String> makePayment(@Valid @RequestBody PaymentRequestDTO paymentRequest) throws Exception {
 		try {
 			paymentService.processPayment(paymentRequest);
 			return ResponseEntity.status(HttpStatus.OK).body("Payment is made ");
 
 		} catch (Exception e) {
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-					.body("Failed to make payment. Error detail: " + e.getMessage());
+			throw e;
 		}
 
 	}
 
 	@GetMapping("/payments")
 	public ResponseEntity<Object> getPaymentsBySearchCriteria(@RequestParam(required = false) String cardNumber,
-			@RequestParam(required = false) String customerNumber) {
+			@RequestParam(required = false) String customerNumber) throws Exception {
 		try {
 			List<Payment> payments = paymentService.findPaymentsBySearchCriteria(cardNumber, customerNumber);
 			return ResponseEntity.ok(payments);
 
 		} catch (Exception e) {
-			return new ResponseEntity<Object>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+			throw e;
 		}
 	}
 

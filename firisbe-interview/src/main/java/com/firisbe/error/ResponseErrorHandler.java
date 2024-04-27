@@ -19,24 +19,13 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 public class ResponseErrorHandler extends ResponseEntityExceptionHandler {
 
 	
-	@Override
+	@Override//for menaging the validation errors auto controlled by spring validation anotations
 	protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
 			HttpHeaders headers, HttpStatusCode status, WebRequest req) {
 		ErrorDetails errorDetails=new ErrorDetails(LocalDateTime.now(), 
 				"Total errors: "+ex.getErrorCount()+" and first error is: "+ex.getFieldError().getDefaultMessage(), req.getDescription(false));
-		return new ResponseEntity<Object>(errorDetails, HttpStatus.BAD_REQUEST);
+		return new ResponseEntity<Object>(errorDetails, status);
 	}
-	
-//	@ExceptionHandler(Exception.class) // exception handled
-//	public ResponseEntity<ErrorDetails> handleExceptions(Exception ex) {
-//
-//		HttpStatus status = HttpStatus.CONFLICT;  
-//
-//		// converting the stack trace to String
-//		String stackTrace = convertPrintStackToString(ex);
-//
-//		return new ResponseEntity<>(new ErrorDetails(LocalDateTime.now(), ex.getMessage(), stackTrace), status);
-//	}
 
 	
 	@ExceptionHandler(RecordsNotBeingFetchedException.class) // exception handled
@@ -63,11 +52,30 @@ public class ResponseErrorHandler extends ResponseEntityExceptionHandler {
 		return new ResponseEntity<>(new ErrorDetails(LocalDateTime.now(), ex.getMessage(), ex.getErrorDetail()), status);
 	}
 	
-	private String convertPrintStackToString(Exception ex) {
-		StringWriter stringWriter = new StringWriter();
-		PrintWriter printWriter = new PrintWriter(stringWriter);
-		ex.printStackTrace(printWriter);
-		String stackTrace = stringWriter.toString();
-		return stackTrace;
+	
+	@ExceptionHandler(RecordsNotExistException.class) // exception handled
+	public ResponseEntity<ErrorDetails> handleRecordCouldNotBeSavedException(RecordsNotExistException ex) {
+
+		HttpStatus status = HttpStatus.NOT_FOUND;
+
+		return new ResponseEntity<>(new ErrorDetails(LocalDateTime.now(), ex.getMessage(), ex.getErrorDetail()), status);
+	}
+ 
+	
+	@ExceptionHandler(PaymentServiceProviderException.class) // exception handled
+	public ResponseEntity<ErrorDetails> handlePaymentServiceProviderException(PaymentServiceProviderException ex) {
+
+		HttpStatus status = HttpStatus.BAD_GATEWAY;
+
+		return new ResponseEntity<>(new ErrorDetails(LocalDateTime.now(), ex.getMessage(), ex.getErrorDetail()), status);
+	}
+ 
+	
+	@ExceptionHandler(ExternalServiceException.class) // exception handled
+	public ResponseEntity<ErrorDetails> handleExternalServiceException(ExternalServiceException ex) {
+
+		HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
+
+		return new ResponseEntity<>(new ErrorDetails(LocalDateTime.now(), ex.getMessage(), ex.getErrorDetail()), status);
 	}
 }
