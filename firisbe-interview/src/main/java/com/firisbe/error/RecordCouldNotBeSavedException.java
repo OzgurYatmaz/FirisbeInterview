@@ -6,8 +6,19 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @ResponseStatus(code = HttpStatus.INTERNAL_SERVER_ERROR)
 public class RecordCouldNotBeSavedException extends RuntimeException {
 
-	public RecordCouldNotBeSavedException(String message) {
+	private String errorDetail;
+	
+	public RecordCouldNotBeSavedException(String message, String errorDetails) {
 		super(message);
+		this.errorDetail = errorDetails;
+	}
+	
+	public String getErrorDetail() {
+		return errorDetail;
+	}
+
+	public void setErrorDetail(String errorDetail) {
+		this.errorDetail = errorDetail;
 	}
 
 }

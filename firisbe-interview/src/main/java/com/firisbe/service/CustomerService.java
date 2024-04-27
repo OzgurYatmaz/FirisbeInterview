@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import com.firisbe.error.DataInsertionConftlictException;
 import com.firisbe.error.RecordCouldNotBeSavedException;
 import com.firisbe.error.RecordsNotBeingFetchedException;
 import com.firisbe.model.Card;
@@ -38,12 +39,12 @@ public class CustomerService {
 			return customers;
 		} catch (Exception e) {
 			LOGGER.error("Error occurred while retrieving customers", e);
-			throw new RecordsNotBeingFetchedException("Error occurred while retrieving customers. Details: "+e.getMessage());
+			throw new RecordsNotBeingFetchedException("Error occurred while retrieving customers!", e.getMessage());
 		}
 
 	}
 
-	public Customer addCustomer(Customer customer) throws Exception {
+	public Customer addCustomer(Customer customer) throws DataInsertionConftlictException {
 
 		// checks if email provided is already used for another customer
 		Customer savedCustomer = null;
@@ -58,20 +59,20 @@ public class CustomerService {
 			try {
 				checkCardsAndCustomerNumber(customer.getCards(), customer.getCustomerNumber());
 				assignCardNumbersFromCustomerNumber(customer, customer.getCustomerNumber());
-			} catch (Exception e) {
+			} catch (DataInsertionConftlictException e) {
 				LOGGER.error("Error occurred while checking if card number is already used, detail: " + e.getMessage(),
 						e);
-				throw e;
+				throw new DataInsertionConftlictException("Conflict in provided data exception", e.getMessage());
 			}
 			try {
 				savedCustomer = customerRepository.save(customer);
 			} catch (Exception e) {
 				LOGGER.error("Error occurred while saving the customer to data base, detail: " + e.getMessage(),
 						e);
-				throw new RecordCouldNotBeSavedException("Error occurred while saving the customer to data base, detail: " + e.getMessage());
+				throw new RecordCouldNotBeSavedException("Error occurred while saving the customer to DB", e.getMessage());
 			}
 		} else {
-			throw new Exception("Email provided is already exist");
+			throw new DataInsertionConftlictException("Conflict in provided data exception", "Email "+customer.getEmail()+" is already allocated");
 		}
 		
 		return savedCustomer;
@@ -81,9 +82,6 @@ public class CustomerService {
 
 		List<Card> cards = new ArrayList<>();
 		Card defaultCard = new Card();
-		/*
-		 * This is a dummy sample
-		 */
 		defaultCard.setCardNumber(UUID.randomUUID().toString());// cards.add(defaultCard);
 		defaultCard.setCustomerNumber(customer.getCustomerNumber());// cards.add(defaultCard);
 		cards.add(defaultCard);
@@ -91,11 +89,11 @@ public class CustomerService {
 
 	}
 
-	private void checkCardsAndCustomerNumber(List<Card> cards, String customerNumber) throws Exception {
+	private void checkCardsAndCustomerNumber(List<Card> cards, String customerNumber) throws DataInsertionConftlictException {
 		boolean areThereAnyDupliceteCardNumbers = false;
 
 		if (customerRepository.existsByCustomerNumber(customerNumber)) {
-			throw new Exception("Customer number " + customerNumber + " are already  used! ");
+			throw new DataInsertionConftlictException( "Customer number " + customerNumber + " is already allocated", "line 100");
 		}
 		List<String> dublicateChecker = new ArrayList<>();
 
@@ -108,7 +106,7 @@ public class CustomerService {
 			}
 		}
 		if (areThereAnyDupliceteCardNumbers) {
-			throw new Exception("Following card numbers are already  used: " + nonUniquecardNumbers.toString());
+			throw new DataInsertionConftlictException("Following card numbers are already  used: "+ nonUniquecardNumbers.toString(),"line 113");
 		}
 
 		//checks if there are any duplicate card numbers in the list  of cards
@@ -117,14 +115,14 @@ public class CustomerService {
 	}
 
 	//checks if there are any duplicate card numbers in the requestbody of add customer object
-	private void areThereDuclicateEntriesForCardNumbers(List<String> dublicateChecker) throws Exception {
+	private void areThereDuclicateEntriesForCardNumbers(List<String> dublicateChecker) throws DataInsertionConftlictException {
 		List<String> duplicates = listDuplicateUsingFilterAndSetAdd(dublicateChecker);
 		if (!CollectionUtils.isEmpty(duplicates)) {
 			StringBuilder nonUniquecardNumbers = new StringBuilder();
 			for (String cardNumber : duplicates) {
 				nonUniquecardNumbers.append(cardNumber).append(", ");
 			}
-			throw new Exception("Following card numbers are duplicates " + nonUniquecardNumbers.toString());
+			throw new DataInsertionConftlictException("Following card numbers are duplicates "+ nonUniquecardNumbers.toString(),"Line 129");
 		}
 	}
 

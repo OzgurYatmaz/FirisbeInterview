@@ -27,46 +27,47 @@ public class ResponseErrorHandler extends ResponseEntityExceptionHandler {
 		return new ResponseEntity<Object>(errorDetails, HttpStatus.BAD_REQUEST);
 	}
 	
-	@ExceptionHandler(Exception.class) // exception handled
-	public ResponseEntity<ErrorDetails> handleExceptions(Exception ex) {
+//	@ExceptionHandler(Exception.class) // exception handled
+//	public ResponseEntity<ErrorDetails> handleExceptions(Exception ex) {
+//
+//		HttpStatus status = HttpStatus.CONFLICT;  
+//
+//		// converting the stack trace to String
+//		String stackTrace = convertPrintStackToString(ex);
+//
+//		return new ResponseEntity<>(new ErrorDetails(LocalDateTime.now(), ex.getMessage(), stackTrace), status);
+//	}
+
+	
+	@ExceptionHandler(RecordsNotBeingFetchedException.class) // exception handled
+	public ResponseEntity<ErrorDetails> handleRecordsNotBeingFetchedException(RecordsNotBeingFetchedException ex) {
+
+		HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;  
+
+		return new ResponseEntity<>(new ErrorDetails(LocalDateTime.now(), ex.getMessage(),  ex.getErrorDetail()), status);
+	}
+	
+	@ExceptionHandler(DataInsertionConftlictException.class) // exception handled
+	public ResponseEntity<ErrorDetails> handleDataInsertionConftlictExceptionn(DataInsertionConftlictException ex) {
 
 		HttpStatus status = HttpStatus.CONFLICT;  
 
-		// converting the stack trace to String
-		StringWriter stringWriter = new StringWriter();
-		PrintWriter printWriter = new PrintWriter(stringWriter);
-		ex.printStackTrace(printWriter);
-		String stackTrace = stringWriter.toString();
-
-		return new ResponseEntity<>(new ErrorDetails(LocalDateTime.now(), ex.getMessage(), stackTrace), status);
+		return new ResponseEntity<>(new ErrorDetails(LocalDateTime.now(), ex.getMessage(),  ex.getErrorDetail()), status);
 	}
-	
-	@ExceptionHandler(RecordsNotBeingFetchedException.class) // exception handled
-	public ResponseEntity<ErrorDetails> handleRecordsNotBeingFetchedException(Exception ex) {
-
-		HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;  
-
-		// converting the stack trace to String
-		StringWriter stringWriter = new StringWriter();
-		PrintWriter printWriter = new PrintWriter(stringWriter);
-		ex.printStackTrace(printWriter);
-		String stackTrace = stringWriter.toString();
-
-		return new ResponseEntity<>(new ErrorDetails(LocalDateTime.now(), ex.getMessage(), stackTrace), status);
-	}
-
 	
 	@ExceptionHandler(RecordCouldNotBeSavedException.class) // exception handled
-	public ResponseEntity<ErrorDetails> handleRecordCouldNotBeSavedException(Exception ex) {
+	public ResponseEntity<ErrorDetails> handleRecordCouldNotBeSavedException(RecordCouldNotBeSavedException ex) {
 
 		HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;  
 
-		// converting the stack trace to String
+		return new ResponseEntity<>(new ErrorDetails(LocalDateTime.now(), ex.getMessage(), ex.getErrorDetail()), status);
+	}
+	
+	private String convertPrintStackToString(Exception ex) {
 		StringWriter stringWriter = new StringWriter();
 		PrintWriter printWriter = new PrintWriter(stringWriter);
 		ex.printStackTrace(printWriter);
 		String stackTrace = stringWriter.toString();
-
-		return new ResponseEntity<>(new ErrorDetails(LocalDateTime.now(), ex.getMessage(), stackTrace), status);
+		return stackTrace;
 	}
 }
