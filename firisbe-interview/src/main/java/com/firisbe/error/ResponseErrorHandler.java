@@ -76,4 +76,14 @@ public class ResponseErrorHandler extends ResponseEntityExceptionHandler {
 
 		return new ResponseEntity<>(new ErrorDetails(LocalDateTime.now(), ex.getMessage(), ex.getErrorDetail()), status);
 	}
+	
+	
+	
+	@ExceptionHandler(InsufficientCardBalanceException.class) // exception handled
+	public ResponseEntity<ErrorDetails> handleExternalServiceException(InsufficientCardBalanceException ex) {
+
+		HttpStatus status = HttpStatus.NOT_ACCEPTABLE;
+
+		return new ResponseEntity<>(new ErrorDetails(LocalDateTime.now(), ex.getMessage(), ex.getErrorDetail()), status);
+	}
 }

@@ -1,6 +1,7 @@
 package com.firisbe.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Entity;
@@ -23,20 +24,23 @@ public class Card {
 	@Schema(description = "Customer number of that card belong", example = "114-1")
 	@JsonIgnore//will be fetched from Customer object
 	private String customerNumber;
-
+	@Schema(description = "Balance of the card", example = "1000.00")
+//	@JsonIgnore
+	private double balance;
 
 	// No-argument constructor (for JPA)
 	public Card() {
 	}
 
-	 
-
-	public Card(String cardNumber, String customerNumber) {
-		this.cardNumber = cardNumber;
-		this.customerNumber = customerNumber;
+//	@JsonProperty
+	public double getBalance() {
+		return balance;
 	}
 
-
+//	@JsonIgnore
+	public void setBalance(double balance) {
+		this.balance = balance;
+	}
 
 	public Integer getId() {
 		return id;

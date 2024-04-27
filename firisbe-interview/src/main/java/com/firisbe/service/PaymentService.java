@@ -17,6 +17,7 @@ import org.springframework.web.client.RestTemplate;
 
 import com.firisbe.configuration.PaymentServiceConfig;
 import com.firisbe.error.ExternalServiceException;
+import com.firisbe.error.InsufficientCardBalanceException;
 import com.firisbe.error.PaymentServiceProviderException;
 import com.firisbe.error.RecordsNotBeingFetchedException;
 import com.firisbe.error.RecordsNotExistException;
@@ -49,7 +50,11 @@ public class PaymentService {
 		}
 
 		Card card = cardRepository.findByCardNumber(paymentRequest.getCardNumber()).get(0);
-
+		
+		if(card.getBalance()<paymentRequest.getAmount()) {
+			throw new InsufficientCardBalanceException("Card balance is insufficient for this payment",
+					"Not enough money in card balance");
+		}
 		// create an object for external service's request body. This is just dummy
 		Payment payment = prepareExternalRequest(paymentRequest, card);
 
@@ -67,16 +72,17 @@ public class PaymentService {
 
 		}
 
-		processExternalResponse(payment, responseEntity);
+		processExternalResponse(payment, responseEntity, card.getId());
 	}
 
-	private void processExternalResponse(Payment payment, ResponseEntity<String> responseEntity)
+	private void processExternalResponse(Payment payment, ResponseEntity<String> responseEntity, Integer cardId)
 			throws ExternalServiceException {
 		if (ObjectUtils.isNotEmpty(responseEntity)) {
 			if (responseEntity.getStatusCode() == HttpStatus.OK) {
 				// only successful payments are saved to DB for now.
 				// Save the payment
 				paymentRepository.save(payment);
+				cardRepository.updateBalanceAfterPayment(cardId, payment.getAmount());
 				// You can also update other information like card balance here if needed
 				System.out.println("Payment processed successfully");
 			} else {
