@@ -2,6 +2,9 @@ package com.firisbe.model;
 
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -11,17 +14,24 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "payments")
+@Schema(description = "Payment Model Information")
 public class Payment {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@JsonIgnore
 	private Integer id;
+	@Schema(description = "payment amount", example = "19.57")
 	private double amount;
+	
 	@Column(name="card_number")
+	@Schema(description = "Card number of the payment made", example = "571-1")
 	private String cardNumber;
 	@Column(name="customer_number")
+	@Schema(description = "Payment owner's number", example = "114-1")
 	private String customerNumber;
 
+	@Schema(description = "Time when payment is processed", example = "2024-04-26 01:36:09.759075")
 	private LocalDateTime paymentDate;
 
 	// No-argument constructor (for JPA)

@@ -1,5 +1,8 @@
 package com.firisbe.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -8,12 +11,17 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "cards")
+@Schema(description = "Card Model Information")
 public class Card {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@JsonIgnore
 	private Integer id;
+	@Schema(description = "Card number", example = "571-1")
 	private String cardNumber;
+	@Schema(description = "Customer number of that card belong", example = "114-1")
+	@JsonIgnore//will be fetched from Customer object
 	private String customerNumber;
 
 
