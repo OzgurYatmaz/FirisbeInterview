@@ -21,7 +21,7 @@ import jakarta.validation.Valid;
 
 @Tag(name = "Payment controller", description = "Make  and query payments") // For Swagger
 @RestController
-@RequestMapping("/transactions")
+@RequestMapping("/payments")
 public class PaymentController {
 
 	@Autowired
@@ -40,7 +40,8 @@ public class PaymentController {
 
 	}
 
-	@GetMapping("/payments")
+	@Operation(summary = "Fetch Payments", description = "Fethc payments made with parameters card number or customer number")
+	@GetMapping("/fetch-payments")
 	public ResponseEntity<Object> getPaymentsBySearchCriteria(@RequestParam(required = false) String cardNumber,
 			@RequestParam(required = false) String customerNumber) throws Exception {
 		try {
