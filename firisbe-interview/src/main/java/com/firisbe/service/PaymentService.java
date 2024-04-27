@@ -80,11 +80,8 @@ public class PaymentService {
 		if (ObjectUtils.isNotEmpty(responseEntity)) {
 			if (responseEntity.getStatusCode() == HttpStatus.OK) {
 				// only successful payments are saved to DB for now.
-				// Save the payment
 				paymentRepository.save(payment);
 				cardRepository.updateBalanceAfterPayment(cardId, payment.getAmount());
-				// You can also update other information like card balance here if needed
-				System.out.println("Payment processed successfully");
 			} else {
 				LOGGER.error("Payment response received indicates the failure of payment: ");
 				throw new ExternalServiceException("Response Code: " + responseEntity.getStatusCode(),

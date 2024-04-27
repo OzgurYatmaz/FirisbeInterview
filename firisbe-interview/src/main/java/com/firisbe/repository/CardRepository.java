@@ -2,13 +2,14 @@ package com.firisbe.repository;
 
 import java.util.List;
 
+import org.springframework.transaction.annotation.Transactional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 import com.firisbe.model.Card;
 
-import jakarta.transaction.Transactional;
 
 public interface CardRepository extends JpaRepository<Card, Integer> {
 

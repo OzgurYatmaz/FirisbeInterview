@@ -15,7 +15,7 @@ public class PaymentRequestDTO {
 	
 	@NotNull(message = "Payment amount cannot be null")
 	@Positive(message = "Payment amount should be greater than nothing :) ")
-	@Schema(description = "Customer's name", example = "Ozgur")
+	@Schema(description = "Amount to be paid", example = "45.11")
 	private double amount;
 
 	public String getCardNumber() {

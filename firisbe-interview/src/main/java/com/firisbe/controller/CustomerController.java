@@ -51,7 +51,7 @@ public class CustomerController {
 		}
 
 		return ResponseEntity.status(HttpStatus.CREATED)
-				.body("User with id " + addedCustomer.getId() + " is created: ");
+				.body("Customer with id " + addedCustomer.getId() + " is created: ");
 	}
 
 
