@@ -27,6 +27,8 @@ public class Customer {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@JsonIgnore
 	private Integer id;
+	@NotNull(message = "Custmer  name cannot be null")
+	@NotBlank(message = "Customer name may not be empty or blank")
 	@Schema(description = "Customer's name", example = "Ozgur")
 	private String name;
 	@NotNull(message = "Custmer  number cannot be null")

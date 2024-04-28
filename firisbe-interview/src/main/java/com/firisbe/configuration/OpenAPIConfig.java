@@ -45,7 +45,15 @@ public class OpenAPIConfig {
         .description("This API exposes endpoints to use sample payment service. Service anables saving customers and cards of the customers to mysql database "
         		+ "and requesting payments to any external payment service providers. And if external payment service"
         		+ " confirms that the payment is made card balance is updated and payment is recorded to payments table."
-        		+ " Lastly, all payments can be queried by date interval or curtomer number or card number.").termsOfService("https://www.bezkoder.com/terms")
+        		+ " Lastly, all payments can be queried by date interval or curtomer number or card number.<br />\r\n"
+        		+ "     <br /> Tech Stack:\r\n"
+        		+ "     <br />\r\n"
+        		+ "     <br /> Language: Java 17\r\n"
+        		+ "     <br /> Framework: Spring Boot 3.2.5\r\n"
+        		+ "     <br /> Database: MySql\r\n"
+        		+ "     <br /> DB Management: Spring Data JPA\r\n"
+        		+ "     <br /> Unit Tests: JUnit and Maven Surefire for test reports\r\n"
+        		+ "     <br /> Build Tool: Maven")
         .license(mitLicense);
 
     return new OpenAPI().info(info).servers(List.of(devServer, prodServer));
