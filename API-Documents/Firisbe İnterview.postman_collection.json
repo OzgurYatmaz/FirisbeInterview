@@ -1,0 +1,207 @@
+{
+	"info": {
+		"_postman_id": "52ef4d37-fb3a-4fd1-b9f4-6bfb17e8ff30",
+		"name": "Firisbe İnterview",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "19605054"
+	},
+	"item": [
+		{
+			"name": "Get All Customers",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://localhost:8080/customer/get-all-customers",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"customer",
+						"get-all-customers"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add Customer",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"ozgur\",\r\n    \"email\": \"o5.y@firisbe.com\",\r\n    \"customerNumber\": \"114-5\",\r\n    \"cards\": [\r\n        {\r\n            \"cardNumber\": \"571-1\",\r\n            \"balance\": 1000.00\r\n        },\r\n        {\r\n            \"cardNumber\": \"571-2\",\r\n            \"balance\": 500.80\r\n        }\r\n    ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/customer/add-customer",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"customer",
+						"add-customer"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "makeApayment",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"cardNumber\": \"571-1\",\r\n    \"amount\": 622.61\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/payments/make-payment",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"payments",
+						"make-payment"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Fetch Payments By Customer Number",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/payments/fetch-payments?customerNumber=114-1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"payments",
+						"fetch-payments"
+					],
+					"query": [
+						{
+							"key": "customerNumber",
+							"value": "114-1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Fetch Payments By Card Number",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/payments/fetch-payments?cardNumber=571-3",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"payments",
+						"fetch-payments"
+					],
+					"query": [
+						{
+							"key": "cardNumber",
+							"value": "571-3"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Fetch Payments By Card Number and Customer Number",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/payments/fetch-payments?cardNumber=571-1&customerNumber=114-1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"payments",
+						"fetch-payments"
+					],
+					"query": [
+						{
+							"key": "cardNumber",
+							"value": "571-1"
+						},
+						{
+							"key": "customerNumber",
+							"value": "114-1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Fetch Payments By Date Interval",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/payments/fetch-payments-bydate?startDate=2024-04-28&endDate=2024-04-29",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"payments",
+						"fetch-payments-bydate"
+					],
+					"query": [
+						{
+							"key": "startDate",
+							"value": "2024-04-28"
+						},
+						{
+							"key": "endDate",
+							"value": "2024-04-29"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
