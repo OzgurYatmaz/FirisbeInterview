@@ -47,7 +47,7 @@ public class PaymentService {
 		// Fetch the card by cardNumber
 		if (!cardRepository.existsByCardNumber(paymentRequest.getCardNumber())) {
 			throw new RecordsNotExistException("Card not found",
-					"Card number " + paymentRequest.getCardNumber() + " is not associated with any card");
+					"Card number " + paymentRequest.getCardNumber() + " is not associated with any customer");
 		}
 
 		Card card = cardRepository.findByCardNumber(paymentRequest.getCardNumber()).get(0);

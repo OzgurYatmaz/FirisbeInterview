@@ -14,11 +14,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.firisbe.error.ErrorDetails;
+import com.firisbe.model.Customer;
 import com.firisbe.model.Payment;
 import com.firisbe.model.PaymentRequestDTO;
 import com.firisbe.service.PaymentService;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -38,6 +40,8 @@ public class PaymentController {
 	@ApiResponses({
 		@ApiResponse(responseCode = "200", description = "When payment is made succesfully"),
 		@ApiResponse(responseCode = "500", description = "When external payment service provider retuning diffrent code implying unsucessfull payment", content = { @Content(schema = @Schema(implementation = ErrorDetails.class)) }),
+		@ApiResponse(responseCode = "400", description = "Bad Request", content = { @Content(schema = @Schema(hidden = true))} ),
+		@ApiResponse(responseCode = "406", description = "When card balance is insufficient to make the payment", content = { @Content(schema = @Schema(implementation = ErrorDetails.class)) }),
 		@ApiResponse(responseCode = "502", description = "When external payment service provider fail in completing the payment", content = { @Content(schema = @Schema(implementation = ErrorDetails.class)) })
 	  })
 	@PostMapping("/make-payment")
@@ -53,6 +57,10 @@ public class PaymentController {
 	}
 
 	@Operation(summary = "Fetch by customer or card number", description = "Fethc payments made with parameters card number or customer number")
+	@ApiResponses({
+		@ApiResponse(responseCode = "200", content = { @Content(array = @ArraySchema(schema = @Schema(implementation = Payment.class)), mediaType = "application/json") }),
+		@ApiResponse(responseCode = "500", description = "When error being occured during querying database", content = { @Content(schema = @Schema(implementation = ErrorDetails.class)) })
+	    })
 	@GetMapping("/fetch-payments")
 	public ResponseEntity<List<Payment>> getPaymentsBySearchCriteria(@RequestParam(required = false) String cardNumber,
 			@RequestParam(required = false) String customerNumber) throws Exception {
@@ -66,6 +74,10 @@ public class PaymentController {
 	}
 
 	@Operation(summary = "Fetch by date interval", description = "Fethc payments made with parameters start date and end date")
+	@ApiResponses({
+		@ApiResponse(responseCode = "200", content = { @Content(array = @ArraySchema(schema = @Schema(implementation = Payment.class)), mediaType = "application/json") }),
+		@ApiResponse(responseCode = "500", description = "When error being occured during querying database", content = { @Content(schema = @Schema(implementation = ErrorDetails.class)) })
+	    })
 	@GetMapping("/fetch-payments-bydate")
     public ResponseEntity<List<Payment>> getAllPaymentsbyDateInterval(@RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
     					@RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) throws Exception {

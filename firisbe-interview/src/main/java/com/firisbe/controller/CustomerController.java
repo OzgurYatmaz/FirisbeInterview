@@ -36,6 +36,7 @@ public class CustomerController {
 	@Operation(summary = "Add customer", description = "Adds  new customer to our database")
 	@ApiResponses({
 		@ApiResponse(responseCode = "201", description = "When customer is successfully saved to data base"),
+		@ApiResponse(responseCode = "400", description = "Bad Request", content = { @Content(schema = @Schema(hidden = true))} ),
 		@ApiResponse(responseCode = "409", description = "When submitted data is in conflict with existing data in database or with itself", content = { @Content(schema = @Schema(implementation = ErrorDetails.class)) })
 	  })
 	@PostMapping("/add-customer")
