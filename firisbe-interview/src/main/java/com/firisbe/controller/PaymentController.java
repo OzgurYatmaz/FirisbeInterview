@@ -1,7 +1,9 @@
 package com.firisbe.controller;
 
+import java.time.LocalDate;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -50,9 +52,9 @@ public class PaymentController {
 
 	}
 
-	@Operation(summary = "Fetch Payments", description = "Fethc payments made with parameters card number or customer number")
+	@Operation(summary = "Fetch by customer or card number", description = "Fethc payments made with parameters card number or customer number")
 	@GetMapping("/fetch-payments")
-	public ResponseEntity<Object> getPaymentsBySearchCriteria(@RequestParam(required = false) String cardNumber,
+	public ResponseEntity<List<Payment>> getPaymentsBySearchCriteria(@RequestParam(required = false) String cardNumber,
 			@RequestParam(required = false) String customerNumber) throws Exception {
 		try {
 			List<Payment> payments = paymentService.findPaymentsBySearchCriteria(cardNumber, customerNumber);
@@ -63,4 +65,16 @@ public class PaymentController {
 		}
 	}
 
+	@Operation(summary = "Fetch by date interval", description = "Fethc payments made with parameters start date and end date")
+	@GetMapping("/fetch-payments-bydate")
+    public ResponseEntity<List<Payment>> getAllPaymentsbyDateInterval(@RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+    					@RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) throws Exception {
+		try {
+			List<Payment> payments = paymentService.getAllPaymentsbyDateInterval(startDate, endDate);
+			return ResponseEntity.ok(payments);
+
+		} catch (Exception e) {
+			throw e;
+		}
+    }
 }

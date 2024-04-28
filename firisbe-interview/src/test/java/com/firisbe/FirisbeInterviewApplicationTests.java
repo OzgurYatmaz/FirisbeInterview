@@ -33,7 +33,7 @@ import com.firisbe.service.PaymentService;
 import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
-@TestInstance(Lifecycle.PER_CLASS)//needed for clening db records method
+@TestInstance(Lifecycle.PER_CLASS)//needed for clening db records function
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class FirisbeInterviewApplicationTests {
@@ -68,8 +68,10 @@ class FirisbeInterviewApplicationTests {
 		List<Card> cards = new ArrayList<Card>();
 		Card c1 = new Card();
 		c1.setCardNumber("571-1");
+		c1.setBalance(1000);
 		Card c2 = new Card();
 		c2.setCardNumber("571-2");
+		c2.setBalance(500);
 		cards.add(c1);
 		cards.add(c2);
 		
@@ -99,6 +101,7 @@ class FirisbeInterviewApplicationTests {
 		List<Card> cards = new ArrayList<Card>();
 		Card c1 = new Card();
 		c1.setCardNumber("571-3");
+		c1.setBalance(750);
 		cards.add(c1);
 		
 		c.setCustomerNumber("114-2");

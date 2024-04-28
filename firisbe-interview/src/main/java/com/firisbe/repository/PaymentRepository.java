@@ -1,5 +1,6 @@
 package com.firisbe.repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -15,4 +16,8 @@ public interface PaymentRepository extends JpaRepository<Payment, Integer> {
 			+ " AND  ( :cardNumber IS NULL OR p.card_number = :cardNumber)", nativeQuery = true)
 	List<Payment> findByCardNumberOrCustomerNumber(@Param("customerNumber") String customerNumber,
 			@Param("cardNumber") String cardNumber);
+
+	@Query(value = "SELECT * from payments as p where p.payment_date BETWEEN :startDate AND :endDate", nativeQuery = true)
+	public List<Payment> getAllPaymentsBetweenDates(@Param("startDate") LocalDateTime startDate,
+			@Param("endDate") LocalDateTime endDate);
 }

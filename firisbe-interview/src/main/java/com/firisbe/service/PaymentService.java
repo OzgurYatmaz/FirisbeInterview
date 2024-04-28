@@ -1,7 +1,9 @@
 package com.firisbe.service;
 
 import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import org.apache.commons.lang3.ObjectUtils;
 import org.slf4j.Logger;
@@ -11,7 +13,6 @@ import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 
@@ -41,7 +42,7 @@ public class PaymentService {
 	@Autowired
 	private PaymentServiceConfig configParameters;
 
-	@Transactional
+//	@Transactional
 	public void processPayment(PaymentRequestDTO paymentRequest) throws ExternalServiceException {
 		// Fetch the card by cardNumber
 		if (!cardRepository.existsByCardNumber(paymentRequest.getCardNumber())) {
@@ -78,6 +79,7 @@ public class PaymentService {
 	private void processExternalResponse(Payment payment, ResponseEntity<String> responseEntity, Integer cardId)
 			throws ExternalServiceException {
 		if (ObjectUtils.isNotEmpty(responseEntity)) {
+			//additional confirmation steps might be needed depending on the requirements
 			if (responseEntity.getStatusCode() == HttpStatus.OK) {
 				// only successful payments are saved to DB for now.
 				paymentRepository.save(payment);
@@ -102,7 +104,6 @@ public class PaymentService {
 
 	private ResponseEntity<String> sendPaymentRequestToExternalService(PaymentRequestDTO externalRequest) {
 
-		System.out.println("timeout: " + configParameters.getTimeout());
 		RestTemplateBuilder restTemplateBuilder = new RestTemplateBuilder();
 		RestTemplate restTemplate = restTemplateBuilder
 				.setConnectTimeout(Duration.ofMillis(configParameters.getTimeout()))
@@ -127,9 +128,24 @@ public class PaymentService {
 			return payments;
 		} catch (Exception e) {
 			LOGGER.error("Error occurred while fetching payment records from DB: ", e);
-			throw new RecordsNotBeingFetchedException("Error occured while fetching payment records from DB",
+			throw new RecordsNotBeingFetchedException("Error occured while fetching payment records from data base",
 					e.getMessage());
 		}
 	}
 
+	public List<Payment> getAllPaymentsbyDateInterval(LocalDate startDate, LocalDate endDate) throws Exception {
+		List<Payment> payments;
+		try {
+			payments = paymentRepository.getAllPaymentsBetweenDates(convertToLocalDateTime(startDate), convertToLocalDateTime(endDate));
+			return payments;
+		} catch (Exception e) {
+			LOGGER.error("Error occurred while fetching payment records from data base: ", e);
+			throw new RecordsNotBeingFetchedException("Error occured while fetching payment records from data base",
+					e.getMessage());
+		}
+	}
+	
+	private LocalDateTime convertToLocalDateTime(LocalDate date) {
+        return LocalDateTime.of(date, LocalTime.MIDNIGHT);
+    }
 }
