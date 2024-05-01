@@ -16,7 +16,7 @@ Project description document is  <a href=API-Documents/Firisbe_java_case_study(m
 ### How to test api
 1. Use the Mockoon collection provided <a href=API-Documents/Mockoon%20Collection%20for%20Mock%20Service>here</a> to mock sample external payment service provider
 
-2. Use the url below or provided postman collection provided in API-Documents folder
+2. Use the url below or provided postman collection provided in API-Documents folder  <br>
    http://localhost:8080/swagger-ui/index.html
 
 
