@@ -1,6 +1,7 @@
 # Spring Boot Project for Firisbe Interview 
 This is a case project for Job interview which simulates a payment service.  
-Project description document is  <a href=API-Documents/Firisbe_java_case_study(mid).pdf>here</a>
+Project description document is  <a href=API-Documents/Firisbe_java_case_study(mid).pdf>here</a> <br>
+Improved version of the project is <a href=https://github.com/OzgurYatmaz/MultiPayAPI>here</a> (External payment service providers are as many as needed and selectable at request)
 
 ### How to run the project
 
@@ -30,11 +31,12 @@ https://app.swaggerhub.com/apis-docs/ozguryatmaz/secure-pay_api_for_firisbe_inte
 
 1.  <a href=API-Documents>Test Reports Tools and More</a><br>
 
-### Tech Stack
+### Tech Stack:
 
 Language: Java 17 <br>
 Framework: Spring Boot 3.2.5 <br>
 Database: MySql <br>
 DB Management: Spring Data JPA <br>
 Unit Tests: JUnit and Maven Surefire for functionality test reports <br>
+Documentation: Swagger 3 (OPenAPI) <br>
 Build Tool: Maven 
