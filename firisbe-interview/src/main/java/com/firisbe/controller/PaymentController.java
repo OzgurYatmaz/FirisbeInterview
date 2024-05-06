@@ -1,3 +1,7 @@
+/**
+ * This package contains classes for all controllers of the project
+ * .
+ */
 package com.firisbe.controller;
 
 import java.time.LocalDate;
@@ -14,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.firisbe.error.ErrorDetails;
+import com.firisbe.error.RecordsNotBeingFetchedException;
 import com.firisbe.model.Customer;
 import com.firisbe.model.Payment;
 import com.firisbe.model.PaymentRequestDTO;
@@ -28,6 +33,21 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
+/**
+ * Main payment controller to make payment from registered card balance and query payments
+ * 
+ * @param paymentRequest object includes card number to associate payment to card and payment amount and id of the external payment provider.
+ * @return Payment response object includes info if payment is successful or failed and response times of external payment service provider and total response time of this web service.
+ * @throws Various exceptions explaining the reasons of failures.
+ * 
+ * @see com.firisbe.error.ResponseErrorHandler class to see possible errors might be thrown from here
+ * 
+ * @author Ozgur Yatmaz
+ * @version 1.0
+ * @since 2024-05-06
+ * 
+ **/
+
 @Tag(name = "Payment controller", description = "Make  and query payments") // For Swagger
 @RestController
 @RequestMapping("/payments")
@@ -36,6 +56,17 @@ public class PaymentController {
 	@Autowired
 	public PaymentService paymentService;
 
+	/**
+	 * 
+	 * Make payment from registered card in data base.
+	 * 
+	 * @param paymentRequest object includes card number to associate payment to card and payment amount.
+	 * @return Payment response object includes info if payment is successful or failed.
+	 * @throws various exception to explaining why payment is failed.
+	 * 
+	 * @see com.firisbe.error.ResponseErrorHandler class to see possible errors might be thrown from here
+	 * 
+	 **/
 	@Operation(summary = "Make Payment", description = "Sends payment request to external payment service and records the paymet details")
 	@ApiResponses({
 		@ApiResponse(responseCode = "200", description = "When payment is made succesfully"),
@@ -55,7 +86,19 @@ public class PaymentController {
 		}
 
 	}
+	
 
+	/**
+	 * 
+	 *  To query payments from database with two optional parameters 
+	 * 
+	 * @param customerNumber 
+	 * @param cardNumber.
+	 * @return list of Payment objects
+	 * @throws RecordsNotBeingFetchedException exception with message explaining the error detail.
+	 * 
+	 * 
+	 **/
 	@Operation(summary = "Fetch by customer or card number", description = "Fethc payments made with parameters card number or customer number")
 	@ApiResponses({
 		@ApiResponse(responseCode = "200", content = { @Content(array = @ArraySchema(schema = @Schema(implementation = Payment.class)), mediaType = "application/json") }),
@@ -72,7 +115,18 @@ public class PaymentController {
 			throw e;
 		}
 	}
-
+	
+	/**
+	 * 
+	 *  To query payments from database with two compulsory parameters 
+	 * 
+	 * @param sartDate format: YYYY-MM-DD example: 2024-04-27
+	 * @param endDate format: YYYY-MM-DD example: 2024-04-28
+	 * @return list of Payment objects
+	 * @throws RecordsNotBeingFetchedException exception with message explaining the error detail.
+	 * 
+	 * 
+	 **/
 	@Operation(summary = "Fetch by date interval", description = "Fethc payments made with parameters start date and end date")
 	@ApiResponses({
 		@ApiResponse(responseCode = "200", content = { @Content(array = @ArraySchema(schema = @Schema(implementation = Payment.class)), mediaType = "application/json") }),
