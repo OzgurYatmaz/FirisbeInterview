@@ -32,8 +32,12 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @ControllerAdvice
 public class ResponseErrorHandler extends ResponseEntityExceptionHandler {
 
-	
-	@Override//for menaging the validation errors auto controlled by spring validation anotations
+	/**
+	 * 
+	 * for managing the validation errors auto controlled by spring validation annotations
+	 * 
+	 */	
+	@Override
 	protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
 			HttpHeaders headers, HttpStatusCode status, WebRequest req) {
 		ErrorDetails errorDetails=new ErrorDetails(LocalDateTime.now(), 

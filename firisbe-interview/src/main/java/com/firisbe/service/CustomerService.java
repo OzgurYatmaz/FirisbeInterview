@@ -27,7 +27,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Main customer service's logic to add to database and fetch customers from
+ * Main customer service's business logic to add to database and fetch customers from
  * database
  * 
  * @throws Various exceptions explaining the reasons of failures.

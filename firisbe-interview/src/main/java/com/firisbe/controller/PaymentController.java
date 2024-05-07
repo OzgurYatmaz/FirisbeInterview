@@ -127,7 +127,7 @@ public class PaymentController {
 
 	/**
 	 * 
-	 * To query payments from database with two compulsory parameters
+	 * To query payments from database with two compulsory parameters defining the date interval
 	 * 
 	 * @param sartDate format: YYYY-MM-DD example: 2024-04-27
 	 * @param endDate  format: YYYY-MM-DD example: 2024-04-28

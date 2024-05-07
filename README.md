@@ -15,9 +15,9 @@ Improved version of the project is <a href=https://github.com/OzgurYatmaz/MultiP
 2. Run com.firisbe.FirisbeInterviewApplication as a Java Application.
 
 ### How to test api
-1. Use the Mockoon collection provided <a href=API-Documents/Mockoon%20Collection%20for%20Mock%20Service>here</a> to mock sample external payment service provider
-
-2. Use the url below or provided postman collection provided in API-Documents folder  <br>
+1. Create scheama in mysql database with following command "CREATE SCHEMA `firisbe-payment"
+2. Use the Mockoon collection provided <a href=API-Documents/Mockoon%20Collection%20for%20Mock%20Service>here</a> to mock sample external payment service provider
+3. Use the url below or provided postman collection provided in API-Documents folder  <br>
    http://localhost:8080/swagger-ui/index.html
 
 

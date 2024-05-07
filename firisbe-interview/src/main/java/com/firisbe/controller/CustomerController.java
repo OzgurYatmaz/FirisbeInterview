@@ -30,7 +30,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.Valid;
 
 /**
- * Main customer controller to add to database or fetch customers from database
+ * Main customer controller to add new customer to database or fetch customers from database
  * 
  * @throws Various exceptions explaining the reasons of failures.
  * 
