@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.firisbe.error.ErrorDetails;
 import com.firisbe.error.RecordsNotBeingFetchedException;
-import com.firisbe.model.Customer;
 import com.firisbe.model.Payment;
 import com.firisbe.model.PaymentRequestDTO;
 import com.firisbe.service.PaymentService;
