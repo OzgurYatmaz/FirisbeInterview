@@ -1,3 +1,7 @@
+/**
+ * This package contains classes for handling the exceptions thrown from controllers.
+ * .
+ */
 package com.firisbe.error;
 
 import java.time.LocalDateTime;
@@ -12,6 +16,18 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+/**
+ *  This  class is for handling the exceptions thrown from controllers. I guess method names are self explanatory :)
+ * 
+ * 
+ * @see com.firisbe.controller.CustomerController  
+ * @see com.firisbe.controller.PaymentController  
+ * 
+ * @author Ozgur Yatmaz
+ * @version 1.0.0
+ * @since 2024-05-07
+ * 
+ */
 
 @ControllerAdvice
 public class ResponseErrorHandler extends ResponseEntityExceptionHandler {

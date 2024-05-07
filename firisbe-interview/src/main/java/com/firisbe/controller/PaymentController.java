@@ -34,25 +34,30 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
 /**
- * Main payment controller to make payment from registered card balance and query payments
+ * Main payment controller to make payment from registered card balance and
+ * query payments
  * 
- * @param paymentRequest object includes card number to associate payment to card and payment amount and id of the external payment provider.
- * @return Payment response object includes info if payment is successful or failed and response times of external payment service provider and total response time of this web service.
  * @throws Various exceptions explaining the reasons of failures.
  * 
- * @see com.firisbe.error.ResponseErrorHandler class to see possible errors might be thrown from here
+ * @see com.firisbe.error.ResponseErrorHandler class to see possible errors
+ *      might be thrown from here
  * 
  * @author Ozgur Yatmaz
- * @version 1.0
+ * @version 1.0.0
  * @since 2024-05-06
  * 
- **/
+ */
 
 @Tag(name = "Payment controller", description = "Make  and query payments") // For Swagger
 @RestController
 @RequestMapping("/payments")
 public class PaymentController {
 
+	/**
+	 * 
+	 * Payment related operations will be done with this
+	 * 
+	 */
 	@Autowired
 	public PaymentService paymentService;
 
@@ -60,21 +65,26 @@ public class PaymentController {
 	 * 
 	 * Make payment from registered card in data base.
 	 * 
-	 * @param paymentRequest object includes card number to associate payment to card and payment amount.
-	 * @return Payment response object includes info if payment is successful or failed.
+	 * @param paymentRequest object includes card number to associate payment to
+	 *                       card and payment amount.
+	 * @return Payment response object includes info if payment is successful or
+	 *         failed.
 	 * @throws various exception to explaining why payment is failed.
 	 * 
-	 * @see com.firisbe.error.ResponseErrorHandler class to see possible errors might be thrown from here
+	 * @see com.firisbe.error.ResponseErrorHandler class to see possible errors
+	 *      might be thrown from here
 	 * 
-	 **/
+	 */
 	@Operation(summary = "Make Payment", description = "Sends payment request to external payment service and records the paymet details")
-	@ApiResponses({
-		@ApiResponse(responseCode = "200", description = "When payment is made succesfully"),
-		@ApiResponse(responseCode = "500", description = "When external payment service provider retuning diffrent code implying unsucessfull payment", content = { @Content(schema = @Schema(implementation = ErrorDetails.class)) }),
-		@ApiResponse(responseCode = "400", description = "Bad Request", content = { @Content(schema = @Schema(hidden = true))} ),
-		@ApiResponse(responseCode = "406", description = "When card balance is insufficient to make the payment", content = { @Content(schema = @Schema(implementation = ErrorDetails.class)) }),
-		@ApiResponse(responseCode = "502", description = "When external payment service provider fail in completing the payment", content = { @Content(schema = @Schema(implementation = ErrorDetails.class)) })
-	  })
+	@ApiResponses({ @ApiResponse(responseCode = "200", description = "When payment is made succesfully"),
+			@ApiResponse(responseCode = "500", description = "When external payment service provider retuning diffrent code implying unsucessfull payment", content = {
+					@Content(schema = @Schema(implementation = ErrorDetails.class)) }),
+			@ApiResponse(responseCode = "400", description = "Bad Request", content = {
+					@Content(schema = @Schema(hidden = true)) }),
+			@ApiResponse(responseCode = "406", description = "When card balance is insufficient to make the payment", content = {
+					@Content(schema = @Schema(implementation = ErrorDetails.class)) }),
+			@ApiResponse(responseCode = "502", description = "When external payment service provider fail in completing the payment", content = {
+					@Content(schema = @Schema(implementation = ErrorDetails.class)) }) })
 	@PostMapping("/make-payment")
 	public ResponseEntity<String> makePayment(@Valid @RequestBody PaymentRequestDTO paymentRequest) throws Exception {
 		try {
@@ -86,24 +96,24 @@ public class PaymentController {
 		}
 
 	}
-	
 
 	/**
 	 * 
-	 *  To query payments from database with two optional parameters 
+	 * To query payments from database with two optional parameters
 	 * 
-	 * @param customerNumber 
+	 * @param customerNumber
 	 * @param cardNumber.
 	 * @return list of Payment objects
-	 * @throws RecordsNotBeingFetchedException exception with message explaining the error detail.
+	 * @throws RecordsNotBeingFetchedException exception with message explaining the
+	 *                                         error detail.
 	 * 
 	 * 
-	 **/
+	 */
 	@Operation(summary = "Fetch by customer or card number", description = "Fethc payments made with parameters card number or customer number")
-	@ApiResponses({
-		@ApiResponse(responseCode = "200", content = { @Content(array = @ArraySchema(schema = @Schema(implementation = Payment.class)), mediaType = "application/json") }),
-		@ApiResponse(responseCode = "500", description = "When error being occured during querying database", content = { @Content(schema = @Schema(implementation = ErrorDetails.class)) })
-	    })
+	@ApiResponses({ @ApiResponse(responseCode = "200", content = {
+			@Content(array = @ArraySchema(schema = @Schema(implementation = Payment.class)), mediaType = "application/json") }),
+			@ApiResponse(responseCode = "500", description = "When error being occured during querying database", content = {
+					@Content(schema = @Schema(implementation = ErrorDetails.class)) }) })
 	@GetMapping("/fetch-payments")
 	public ResponseEntity<List<Payment>> getPaymentsBySearchCriteria(@RequestParam(required = false) String cardNumber,
 			@RequestParam(required = false) String customerNumber) throws Exception {
@@ -115,26 +125,29 @@ public class PaymentController {
 			throw e;
 		}
 	}
-	
+
 	/**
 	 * 
-	 *  To query payments from database with two compulsory parameters 
+	 * To query payments from database with two compulsory parameters
 	 * 
 	 * @param sartDate format: YYYY-MM-DD example: 2024-04-27
-	 * @param endDate format: YYYY-MM-DD example: 2024-04-28
+	 * @param endDate  format: YYYY-MM-DD example: 2024-04-28
 	 * @return list of Payment objects
-	 * @throws RecordsNotBeingFetchedException exception with message explaining the error detail.
+	 * @throws RecordsNotBeingFetchedException exception with message explaining the
+	 *                                         error detail.
 	 * 
 	 * 
-	 **/
+	 */
 	@Operation(summary = "Fetch by date interval", description = "Fethc payments made with parameters start date and end date")
-	@ApiResponses({
-		@ApiResponse(responseCode = "200", content = { @Content(array = @ArraySchema(schema = @Schema(implementation = Payment.class)), mediaType = "application/json") }),
-		@ApiResponse(responseCode = "500", description = "When error being occured during querying database", content = { @Content(schema = @Schema(implementation = ErrorDetails.class)) })
-	    })
+	@ApiResponses({ @ApiResponse(responseCode = "200", content = {
+			@Content(array = @ArraySchema(schema = @Schema(implementation = Payment.class)), mediaType = "application/json") }),
+			@ApiResponse(responseCode = "500", description = "When error being occured during querying database", content = {
+					@Content(schema = @Schema(implementation = ErrorDetails.class)) }) })
 	@GetMapping("/fetch-payments-bydate")
-    public ResponseEntity<List<Payment>> getAllPaymentsbyDateInterval(@RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
-    					@RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) throws Exception {
+	public ResponseEntity<List<Payment>> getAllPaymentsbyDateInterval(
+			@RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+			@RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate)
+			throws Exception {
 		try {
 			List<Payment> payments = paymentService.getAllPaymentsbyDateInterval(startDate, endDate);
 			return ResponseEntity.ok(payments);
@@ -142,5 +155,5 @@ public class PaymentController {
 		} catch (Exception e) {
 			throw e;
 		}
-    }
+	}
 }
