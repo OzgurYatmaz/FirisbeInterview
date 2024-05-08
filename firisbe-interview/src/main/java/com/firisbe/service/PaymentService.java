@@ -24,6 +24,7 @@ import com.firisbe.configuration.PaymentServiceConfig;
 import com.firisbe.error.DataInsertionConftlictException;
 import com.firisbe.error.ExternalServiceException;
 import com.firisbe.error.InsufficientCardBalanceException;
+import com.firisbe.error.ParametersNotProvidedException;
 import com.firisbe.error.PaymentServiceProviderException;
 import com.firisbe.error.RecordsNotBeingFetchedException;
 import com.firisbe.error.RecordsNotExistException;
@@ -209,7 +210,7 @@ public class PaymentService {
 	public List<Payment> findPaymentsBySearchCriteria(String cardNumber, String customerNumber) throws Exception {
 
 		if(StringUtils.isEmpty(customerNumber) && StringUtils.isEmpty(cardNumber)) {
-			throw new RecordsNotBeingFetchedException("Both Arguments cannot be empty","Please provide cardNumber or customerNumber or both");
+			throw new ParametersNotProvidedException("Both Arguments cannot be empty","Please provide cardNumber or customerNumber or both");
 		}
 		List<Payment> payments;
 		try {

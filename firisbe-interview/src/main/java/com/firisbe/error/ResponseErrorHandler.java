@@ -106,4 +106,12 @@ public class ResponseErrorHandler extends ResponseEntityExceptionHandler {
 
 		return new ResponseEntity<>(new ErrorDetails(LocalDateTime.now(), ex.getMessage(), ex.getErrorDetail()), status);
 	}
+	
+	@ExceptionHandler(ParametersNotProvidedException.class) // exception handled
+	public ResponseEntity<ErrorDetails> handleParametersNotProvidedException(ParametersNotProvidedException ex) {
+
+		HttpStatus status = HttpStatus.BAD_REQUEST;
+
+		return new ResponseEntity<>(new ErrorDetails(LocalDateTime.now(), ex.getMessage(), ex.getErrorDetail()), status);
+	}
 }
