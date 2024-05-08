@@ -16,6 +16,7 @@ import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 
@@ -33,8 +34,7 @@ import com.firisbe.repository.CardRepository;
 import com.firisbe.repository.PaymentRepository;
 
 /**
- * Main customer service's business logic to add to database and fetch customers from
- * database
+ * Main payment service's business logic is executed here
  * 
  * @throws Various exceptions explaining the reasons of failures.
  * 
@@ -43,7 +43,7 @@ import com.firisbe.repository.PaymentRepository;
  * 
  * @author Ozgur Yatmaz
  * @version 1.0.0
- * @since 2024-05-06
+ * @since 2024-05-09
  * 
  */
 @Service
@@ -51,13 +51,11 @@ public class PaymentService {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(PaymentService.class);
 
-
 	/**
 	 * Payment records related database operations are done with this
 	 */
 	@Autowired
 	private PaymentRepository paymentRepository;
-
 
 	/**
 	 * Card related database operations are done with this
@@ -65,12 +63,11 @@ public class PaymentService {
 	@Autowired
 	private CardRepository cardRepository;
 
-
 	/**
 	 * 
 	 * To read configuration parameters from .properties file
 	 * 
-	 * @see com.firisbe.configuration.PaymentServiceConfig  class 
+	 * @see com.firisbe.configuration.PaymentServiceConfig class
 	 * @see /src/main/resources/application-dev.properties
 	 * 
 	 */
@@ -79,11 +76,11 @@ public class PaymentService {
 
 	/**
 	 * 
-	 * Processes payment by using external serive
+	 * Processes payment by using external payment service provider
 	 * 
-	 * @param payment request object to carry payment data which consist of payment amount and card number
+	 * @param payment request object to carry payment data which consist of payment
+	 *                amount and card number
 	 * @throws various exceptions depending on the failure reason.
-	 * 
 	 * 
 	 */
 	public void processPayment(PaymentRequestDTO paymentRequest) throws ExternalServiceException {
@@ -94,18 +91,19 @@ public class PaymentService {
 		}
 
 		Card card = cardRepository.findByCardNumber(paymentRequest.getCardNumber()).get(0);
-		
-		if(card.getBalance()<paymentRequest.getAmount()) {
+
+		if (card.getBalance() < paymentRequest.getAmount()) {
 			throw new InsufficientCardBalanceException("Card balance is insufficient for this payment",
 					"Not enough money in card balance");
 		}
-		// create an object for external service's request body. This is just dummy
-		Payment payment = prepareExternalRequest(paymentRequest, card);
+		// Create payment record object for inserting payment info to database.
+		Payment payment = preparePaymetRecordForDataBase(paymentRequest, card);
 
 		ResponseEntity<String> responseEntity = null;
 		try {
 
-			// Call the external payment service
+			// Call the external payment service provider. Usually conversion is needed in
+			// real life projects
 			responseEntity = sendPaymentRequestToExternalService(paymentRequest);
 
 		} catch (ResourceAccessException ex) {
@@ -119,10 +117,23 @@ public class PaymentService {
 		processExternalResponse(payment, responseEntity, card.getId());
 	}
 
+	/**
+	 * 
+	 * Processes the payment response received from external payment service
+	 * provider. If payment is successful updates card balance from database and
+	 * inserts payment record to database.
+	 * 
+	 * @param payment object for recording the payment detail to database.
+	 * @param payment response container received from external payment service
+	 *                provider.
+	 * @param cardId  to update card balance in database.
+	 * @throws ExternalServiceException if response status code is not 200.
+	 * 
+	 */
 	private void processExternalResponse(Payment payment, ResponseEntity<String> responseEntity, Integer cardId)
 			throws ExternalServiceException {
 		if (ObjectUtils.isNotEmpty(responseEntity)) {
-			//additional confirmation steps might be needed depending on the requirements
+			// additional confirmation steps might be needed depending on the requirements
 			if (responseEntity.getStatusCode() == HttpStatus.OK) {
 				// only successful payments are saved to DB for now.
 				paymentRepository.save(payment);
@@ -137,14 +148,14 @@ public class PaymentService {
 
 	/**
 	 * 
-	 * Dummy sample for preparing request body of external service provider.
+	 * Prepares payment record object to create payment record in database.
 	 * 
-	 * @param payment request object to carry payment data which consist of payment amount and card number
-	 * @throws various exceptions depending on the failure reason.
-	 * 
+	 * @param payment request object to carry payment data which consist of payment
+	 *                amount and card number.
+	 * @param Card    object for card info from which payment will be done.
 	 * 
 	 */
-	private Payment prepareExternalRequest(PaymentRequestDTO paymentRequest, Card card) {
+	private Payment preparePaymetRecordForDataBase(PaymentRequestDTO paymentRequest, Card card) {
 		Payment payment = new Payment();
 		payment.setCardNumber(card.getCardNumber());
 		payment.setAmount(paymentRequest.getAmount());
@@ -154,6 +165,18 @@ public class PaymentService {
 		return payment;
 	}
 
+	/**
+	 * 
+	 * Sends payment request to external payment service provider.
+	 * 
+	 * @param payment request object to carry payment data which consist of payment
+	 *                amount and card number for this simple case. In real life
+	 *                projects before calling external service; object conversion is
+	 *                done.
+	 * 
+	 * @throws ExternalServiceException if failure occurs during external service call.
+	 * 
+	 */
 	private ResponseEntity<String> sendPaymentRequestToExternalService(PaymentRequestDTO externalRequest) {
 
 		RestTemplateBuilder restTemplateBuilder = new RestTemplateBuilder();
@@ -172,8 +195,22 @@ public class PaymentService {
 		}
 	}
 
+	/**
+	 * 
+	 * Fetches payment records with cutomerNumber or cardNumber or both. Both of the
+	 * parameters are optional
+	 * 
+	 * @param cutomerNumber if it is null it will be disregarded in repository.
+	 * @param cardNumber    if it is null  it will be disregarded in repository.
+	 * 
+	 * @throws RecordsNotBeingFetchedException is thrown if there is a failure in reaching database records.
+	 * 
+	 */
 	public List<Payment> findPaymentsBySearchCriteria(String cardNumber, String customerNumber) throws Exception {
 
+		if(StringUtils.isEmpty(customerNumber) && StringUtils.isEmpty(cardNumber)) {
+			throw new RecordsNotBeingFetchedException("Both Arguments cannot be empty","Please provide cardNumber or customerNumber or both");
+		}
 		List<Payment> payments;
 		try {
 			payments = paymentRepository.findByCardNumberOrCustomerNumber(customerNumber, cardNumber);
@@ -185,10 +222,21 @@ public class PaymentService {
 		}
 	}
 
+	/**
+	 * 
+	 * Fetches payment records for time interval between startDate and endDate.
+	 * 
+	 * @param startDate, compulsory and definition is self explanatory :) format: YYYY-MM-DD example: 2024-04-27
+	 * @param endDate, compulsory and definition is  self explanatory :) format: YYYY-MM-DD example: 2024-04-27
+	 * 
+	 *  @throws RecordsNotBeingFetchedException is thrown if there is a failure in reaching database records.
+	 *  
+	 */
 	public List<Payment> getAllPaymentsbyDateInterval(LocalDate startDate, LocalDate endDate) throws Exception {
 		List<Payment> payments;
 		try {
-			payments = paymentRepository.getAllPaymentsBetweenDates(convertToLocalDateTime(startDate), convertToLocalDateTime(endDate));
+			payments = paymentRepository.getAllPaymentsBetweenDates(convertToLocalDateTime(startDate),
+					convertToLocalDateTime(endDate));
 			return payments;
 		} catch (Exception e) {
 			LOGGER.error("Error occurred while fetching payment records from data base: ", e);
@@ -196,8 +244,16 @@ public class PaymentService {
 					e.getMessage());
 		}
 	}
-	
+
+	/**
+	 * 
+	 * Converts date object to local date time for further database querying.
+	 * 
+	 * @param dateObject of format: YYYY-MM-DD example: 2024-04-27
+	 * 
+	 *  
+	 */
 	private LocalDateTime convertToLocalDateTime(LocalDate date) {
-        return LocalDateTime.of(date, LocalTime.MIDNIGHT);
-    }
+		return LocalDateTime.of(date, LocalTime.MIDNIGHT);
+	}
 }
