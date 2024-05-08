@@ -135,6 +135,15 @@ public class PaymentService {
 		}
 	}
 
+	/**
+	 * 
+	 * Dummy sample for preparing request body of external service provider.
+	 * 
+	 * @param payment request object to carry payment data which consist of payment amount and card number
+	 * @throws various exceptions depending on the failure reason.
+	 * 
+	 * 
+	 */
 	private Payment prepareExternalRequest(PaymentRequestDTO paymentRequest, Card card) {
 		Payment payment = new Payment();
 		payment.setCardNumber(card.getCardNumber());
