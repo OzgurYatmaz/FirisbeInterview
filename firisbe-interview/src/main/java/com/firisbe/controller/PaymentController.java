@@ -1,6 +1,5 @@
 /**
  * This package contains classes for all controllers of the project
- * .
  */
 package com.firisbe.controller;
 
@@ -53,9 +52,7 @@ import jakarta.validation.Valid;
 public class PaymentController {
 
 	/**
-	 * 
 	 * Payment related operations will be done with this
-	 * 
 	 */
 	@Autowired
 	public PaymentService paymentService;

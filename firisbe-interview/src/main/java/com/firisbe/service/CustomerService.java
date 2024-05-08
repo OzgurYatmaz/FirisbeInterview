@@ -1,6 +1,5 @@
 /**
  * This package contains classes for services
- * .
  */
 package com.firisbe.service;
 
@@ -46,17 +45,13 @@ public class CustomerService {
 	private static final Logger LOGGER = LoggerFactory.getLogger(CustomerService.class);
 
 	/**
-	 * 
 	 * Customer related database operations are done with this
-	 * 
 	 */
 	@Autowired
 	private CustomerRepository customerRepository;
 
 	/**
-	 * 
 	 * Card related database operations are done with this
-	 * 
 	 */
 	@Autowired
 	private CardRepository cardRepository;
@@ -65,10 +60,7 @@ public class CustomerService {
 	 * 
 	 * Fetches all customers registered in database
 	 * 
-	 * @return List of customer objects
-	 * @throws RecordsNotBeingFetchedException if records are not fetched from data
-	 *                                         base.
-	 * 
+	 * @throws RecordsNotBeingFetchedException if records could not be fetched from database.
 	 * 
 	 */
 	public List<Customer> getAllCustomers() throws Exception {
@@ -89,7 +81,6 @@ public class CustomerService {
 	 * customer.
 	 * 
 	 * @param Customer object with or without cards field.
-	 * @return customer object which is saved to data base.
 	 * @throws DataInsertionConftlictException if provided data conflict with
 	 *                                         existing data in database
 	 * 
@@ -228,7 +219,7 @@ public class CustomerService {
 	 * 
 	 * 
 	 */
-	List<String> listDuplicateUsingFilterAndSetAdd(List<String> list) {
+	private List<String> listDuplicateUsingFilterAndSetAdd(List<String> list) {
 		Set<String> elements = new HashSet<>();
 		return list.stream().filter(n -> !elements.add(n)).collect(Collectors.toList());
 	}

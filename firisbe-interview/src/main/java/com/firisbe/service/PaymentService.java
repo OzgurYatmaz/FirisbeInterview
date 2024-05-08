@@ -1,3 +1,6 @@
+/**
+ * This package contains classes for services
+ */
 package com.firisbe.service;
 
 import java.time.Duration;
@@ -17,6 +20,7 @@ import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 
 import com.firisbe.configuration.PaymentServiceConfig;
+import com.firisbe.error.DataInsertionConftlictException;
 import com.firisbe.error.ExternalServiceException;
 import com.firisbe.error.InsufficientCardBalanceException;
 import com.firisbe.error.PaymentServiceProviderException;
@@ -28,21 +32,60 @@ import com.firisbe.model.PaymentRequestDTO;
 import com.firisbe.repository.CardRepository;
 import com.firisbe.repository.PaymentRepository;
 
+/**
+ * Main customer service's business logic to add to database and fetch customers from
+ * database
+ * 
+ * @throws Various exceptions explaining the reasons of failures.
+ * 
+ * @see com.firisbe.error.ResponseErrorHandler class to see possible errors
+ *      might be thrown from here
+ * 
+ * @author Ozgur Yatmaz
+ * @version 1.0.0
+ * @since 2024-05-06
+ * 
+ */
 @Service
 public class PaymentService {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(PaymentService.class);
 
+
+	/**
+	 * Payment records related database operations are done with this
+	 */
 	@Autowired
 	private PaymentRepository paymentRepository;
 
+
+	/**
+	 * Card related database operations are done with this
+	 */
 	@Autowired
 	private CardRepository cardRepository;
 
+
+	/**
+	 * 
+	 * To read configuration parameters from .properties file
+	 * 
+	 * @see com.firisbe.configuration.PaymentServiceConfig  class 
+	 * @see /src/main/resources/application-dev.properties
+	 * 
+	 */
 	@Autowired
 	private PaymentServiceConfig configParameters;
 
-//	@Transactional
+	/**
+	 * 
+	 * Processes payment by using external serive
+	 * 
+	 * @param payment request object to carry payment data which consist of payment amount and card number
+	 * @throws various exceptions depending on the failure reason.
+	 * 
+	 * 
+	 */
 	public void processPayment(PaymentRequestDTO paymentRequest) throws ExternalServiceException {
 		// Fetch the card by cardNumber
 		if (!cardRepository.existsByCardNumber(paymentRequest.getCardNumber())) {
