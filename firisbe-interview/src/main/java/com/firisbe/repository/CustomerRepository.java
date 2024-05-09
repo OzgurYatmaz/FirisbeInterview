@@ -1,11 +1,11 @@
 /**
- * This package for interfaces responsible for database operations
+ * This is package for interfaces responsible for database operations
  */
 package com.firisbe.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.firisbe.model.Customer;
+import com.firisbe.entity.Customer;
 
 /**
  * 

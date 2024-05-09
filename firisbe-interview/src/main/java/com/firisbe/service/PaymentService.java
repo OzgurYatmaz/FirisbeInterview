@@ -21,6 +21,9 @@ import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 
 import com.firisbe.configuration.PaymentServiceConfig;
+import com.firisbe.dto.PaymentRequestDTO;
+import com.firisbe.entity.Card;
+import com.firisbe.entity.Payment;
 import com.firisbe.error.DataInsertionConftlictException;
 import com.firisbe.error.ExternalServiceException;
 import com.firisbe.error.InsufficientCardBalanceException;
@@ -28,9 +31,6 @@ import com.firisbe.error.ParametersNotProvidedException;
 import com.firisbe.error.PaymentServiceProviderException;
 import com.firisbe.error.RecordsNotBeingFetchedException;
 import com.firisbe.error.RecordsNotExistException;
-import com.firisbe.model.Card;
-import com.firisbe.model.Payment;
-import com.firisbe.model.PaymentRequestDTO;
 import com.firisbe.repository.CardRepository;
 import com.firisbe.repository.PaymentRepository;
 
@@ -153,7 +153,7 @@ public class PaymentService {
 	 * 
 	 * @param payment request object to carry payment data which consist of payment
 	 *                amount and card number.
-	 * @param Card    object for card info from which payment will be done.
+	 * @param CardDTO    object for card info from which payment will be done.
 	 * 
 	 */
 	private Payment preparePaymetRecordForDataBase(PaymentRequestDTO paymentRequest, Card card) {

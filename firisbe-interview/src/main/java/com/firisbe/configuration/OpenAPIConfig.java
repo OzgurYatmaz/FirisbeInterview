@@ -39,7 +39,8 @@ public class OpenAPIConfig {
 
 	/**
 	 * 
-	 * Creates bean of swagger UI object for swagger page of the project
+	 * Creates bean of swagger UI object for swagger UI.
+	 * General API info is set here.
 	 * 
 	 * @return OpenApi object to be used by swagger api internally
 	 * 
@@ -70,6 +71,7 @@ public class OpenAPIConfig {
 						+ "     <br /> Framework: Spring Boot 3.2.5\r\n" + "     <br /> Database: MySql\r\n"
 						+ "     <br /> DB Management: Spring Data JPA\r\n"
 						+ "     <br /> Unit Tests: JUnit and Maven Surefire for test reports\r\n"
+						+ "     <br /> Documentation: Swagger 3 - (OpenAPI) \r\n"
 						+ "     <br /> Build Tool: Maven")
 				.license(mitLicense);
 

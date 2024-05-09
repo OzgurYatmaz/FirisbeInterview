@@ -14,11 +14,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import com.firisbe.dto.AddCustomerRequestDTO;
+import com.firisbe.dto.CardDTO;
+import com.firisbe.entity.Card;
+import com.firisbe.entity.Customer;
 import com.firisbe.error.DataInsertionConftlictException;
 import com.firisbe.error.RecordCouldNotBeSavedException;
 import com.firisbe.error.RecordsNotBeingFetchedException;
-import com.firisbe.model.Card;
-import com.firisbe.model.Customer;
 import com.firisbe.repository.CardRepository;
 import com.firisbe.repository.CustomerRepository;
 
@@ -86,8 +88,9 @@ public class CustomerService {
 	 * 
 	 * 
 	 */
-	public Customer addCustomer(Customer customer) throws DataInsertionConftlictException {
+	public Customer addCustomer(AddCustomerRequestDTO addCustomerRequest) throws DataInsertionConftlictException {
 
+		Customer customer = convertDTO_To_Entity(addCustomerRequest);
 		// checks if email provided is already used for another customer
 		Customer savedCustomer = null;
 		if (!customerRepository.existsByEmail(customer.getEmail())) {
@@ -119,6 +122,37 @@ public class CustomerService {
 		}
 
 		return savedCustomer;
+	}
+
+	/**
+	 * 
+	 * request dto object is being converted to entity object to be handled JPA.
+	 * 
+	 * @param request body object for transmitting data in web.
+	 * 
+	 * @return customer entity object to be saved database by JPA.
+	 * 
+	 * 
+	 */
+	private Customer convertDTO_To_Entity(AddCustomerRequestDTO addCustomerRequest) {
+		
+		Customer customer = new Customer();
+		customer.setName(addCustomerRequest.getName());
+		customer.setEmail(addCustomerRequest.getEmail());
+		customer.setCustomerNumber(addCustomerRequest.getCustomerNumber());
+		List<CardDTO> cards = addCustomerRequest.getCards();
+		if(!CollectionUtils.isEmpty(cards)) {
+			List<Card> newCards = new ArrayList<Card>();
+			for(CardDTO card : cards) {
+				Card tempCard = new Card();
+				tempCard.setCardNumber(card.getCardNumber());
+				tempCard.setCustomerNumber(addCustomerRequest.getCustomerNumber());
+				tempCard.setBalance(card.getBalance());
+				newCards.add(tempCard);
+			}
+			customer.setCards(newCards);
+		}
+		return customer;
 	}
 
 	/**

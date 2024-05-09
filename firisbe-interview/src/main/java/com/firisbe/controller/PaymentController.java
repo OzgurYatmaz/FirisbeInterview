@@ -16,10 +16,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.firisbe.dto.PaymentRequestDTO;
+import com.firisbe.entity.Payment;
 import com.firisbe.error.ErrorDetails;
 import com.firisbe.error.RecordsNotBeingFetchedException;
-import com.firisbe.model.Payment;
-import com.firisbe.model.PaymentRequestDTO;
 import com.firisbe.service.PaymentService;
 
 import io.swagger.v3.oas.annotations.Operation;

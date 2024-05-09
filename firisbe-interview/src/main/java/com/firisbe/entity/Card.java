@@ -1,8 +1,12 @@
-package com.firisbe.model;
+/**
+ * This package is for automatic creation of database tables by JPA.
+ * And objects of the classes classes here are used by JPA for database operations.
+ */
+package com.firisbe.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
 
+import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -10,29 +14,33 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
+/**
+ * 
+ * This class is auto converted to table in database automatically by JPA
+ * Corresponding table name is cards and card info of customers are kept there.
+ * 
+ * 
+ * @author Ozgur Yatmaz
+ * @version 1.0.0
+ * @since 2024-05-06
+ * 
+ */
+
+@Hidden//To hide this class from Swagger UI as it is not DTO
 @Entity
 @Table(name = "cards")
-@Schema(description = "Card Model Information")
 public class Card {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@JsonIgnore
 	private Integer id;
-	@Schema(description = "Card number", example = "571-1")
 	private String cardNumber;
-	@Schema(description = "Customer number of that card belong", example = "114-1")
 	@JsonIgnore//will be fetched from Customer object
 	private String customerNumber;
-	@Schema(description = "Balance of the card", example = "1000.00")
-//	@JsonIgnore
 	private double balance;
 
-	// No-argument constructor (for JPA)
-	public Card() {
-	}
 
-//	@JsonProperty
 	public double getBalance() {
 		return balance;
 	}

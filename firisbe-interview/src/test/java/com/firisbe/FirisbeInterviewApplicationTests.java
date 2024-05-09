@@ -6,7 +6,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
@@ -21,10 +20,11 @@ import org.junit.jupiter.api.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import com.firisbe.model.Card;
-import com.firisbe.model.Customer;
-import com.firisbe.model.Payment;
-import com.firisbe.model.PaymentRequestDTO;
+import com.firisbe.dto.AddCustomerRequestDTO;
+import com.firisbe.dto.CardDTO;
+import com.firisbe.dto.PaymentRequestDTO;
+import com.firisbe.entity.Customer;
+import com.firisbe.entity.Payment;
 import com.firisbe.repository.CustomerRepository;
 import com.firisbe.repository.PaymentRepository;
 import com.firisbe.service.CustomerService;
@@ -32,25 +32,68 @@ import com.firisbe.service.PaymentService;
 
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * 
+ * This class is for unit tests. All unit test are executed here
+ * maven-surefire-report-plugin is used to generate test reports.
+ * Test report is generated here: /firisbe-interview/target/site/surefire-report.html
+ * 
+ * 
+ * @author Ozgur Yatmaz
+ * @version 1.0.0
+ * @since 2024-05-06
+ * 
+ */
+
 @SpringBootTest
-@TestInstance(Lifecycle.PER_CLASS)//needed for clening db records function
+@TestInstance(Lifecycle.PER_CLASS)//needed for cleaning database records function
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class FirisbeInterviewApplicationTests {
 
+
+	/**
+	 * 
+	 * Payment related database operations will be done with this
+	 * 
+	 */
 	@Autowired
 	private PaymentRepository paymentRepository;
 	
 
+
+	/**
+	 * 
+	 * Customer related operations will be done with this
+	 * 
+	 */
 	@Autowired
 	private CustomerRepository customerRepository;
 	
+
+	/**
+	 * 
+	 * Customer related operations will be done with this
+	 * 
+	 */
 	@Autowired
 	private CustomerService customerService;
 	
+
+	/**
+	 * 
+	 * Business logic of payment operation
+	 * 
+	 */
 	@Autowired
 	private PaymentService paymentService;
 
+
+	/**
+	 * 
+	 * Clears all records in database to make it ready for tests
+	 * 
+	 */
     @BeforeAll
     @Transactional
 	void prepereingDBForTests() {
@@ -59,17 +102,22 @@ class FirisbeInterviewApplicationTests {
 	}
     
     
-	
+    /**
+	 * 
+	 * Adds first customer with two cards to database.
+	 * 
+	 */
 	@Test
+//	@Disabled
 	@DisplayName("Add customer")
 	@Order(1)
 	void addCustomer1() {
-		Customer c = new Customer();
-		List<Card> cards = new ArrayList<Card>();
-		Card c1 = new Card();
+		AddCustomerRequestDTO c = new AddCustomerRequestDTO();
+		List<CardDTO> cards = new ArrayList<CardDTO>();
+		CardDTO c1 = new CardDTO();
 		c1.setCardNumber("571-1");
 		c1.setBalance(1000);
-		Card c2 = new Card();
+		CardDTO c2 = new CardDTO();
 		c2.setCardNumber("571-2");
 		c2.setBalance(500);
 		cards.add(c1);
@@ -93,13 +141,19 @@ class FirisbeInterviewApplicationTests {
         assertEquals("571-1", customerSaved.getCards().get(0).getCardNumber());
 	}
 	
+	/**
+	 * 
+	 * Adds second customer with one card to database.
+	 * 
+	 */
 	@Test
+//	@Disabled
 	@DisplayName("Add customer")
 	@Order(2)
 	void addCustomer2() {
-		Customer c = new Customer();
-		List<Card> cards = new ArrayList<Card>();
-		Card c1 = new Card();
+		AddCustomerRequestDTO c = new AddCustomerRequestDTO();
+		List<CardDTO> cards = new ArrayList<CardDTO>();
+		CardDTO c1 = new CardDTO();
 		c1.setCardNumber("571-3");
 		c1.setBalance(750);
 		cards.add(c1);
@@ -119,7 +173,13 @@ class FirisbeInterviewApplicationTests {
         assertEquals("571-3", customerSaved.getCards().get(0).getCardNumber());
 	}
 	
+	/**
+	 * 
+	 * Checks if 2 customers added to database with previous operation are accessible.
+	 * 
+	 */
 	@Test
+//	@Disabled
 	@DisplayName("Fetch all customers")
 	@Order(3)
 	void fetchAllCustomersTest() {
@@ -129,8 +189,14 @@ class FirisbeInterviewApplicationTests {
         assertEquals("114-1", customers.get(0).getCustomerNumber());
 	}
 	
+	/**
+	 * 
+	 * Makes 3 payments from 3 cards added with previous operations.
+	 * 
+	 */
 	@Test
-	@DisplayName("Fetch all customers")
+//	@Disabled
+	@DisplayName("Make 3 payments")
 	@Order(4)
 	void makePaymentTest() {
 		PaymentRequestDTO r1 = new PaymentRequestDTO();
@@ -154,7 +220,13 @@ class FirisbeInterviewApplicationTests {
 		
 	}
 	
+	/**
+	 * 
+	 * Checks if payments are fetched by customer number.
+	 * 
+	 */
 	@Test
+//	@Disabled
 	@DisplayName("Fetch by customerNumber")
 	@Order(5)
 	void findPaymentsByCustomerNumber() {
@@ -166,6 +238,11 @@ class FirisbeInterviewApplicationTests {
      
 	}
 	
+	/**
+	 * 
+	 * Checks if payments are fetched by card number.
+	 * 
+	 */
 	@Test
 //	@Disabled
 	@DisplayName("Fetch by  CardNumber")
@@ -179,7 +256,11 @@ class FirisbeInterviewApplicationTests {
     
 	 
 	}
-	
+	/**
+	 * 
+	 * Checks if payments are fetched by both customer number and card number.
+	 * 
+	 */
 	@Test
 //	@Disabled
 	@DisplayName("Fetch by customerNumber and CardNumber")

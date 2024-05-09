@@ -1,5 +1,5 @@
 /**
- * This package for interfaces responsible for database operations
+ * This package is for interfaces responsible for database operations
  */
 package com.firisbe.repository;
 
@@ -10,7 +10,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import com.firisbe.model.Payment;
+import com.firisbe.entity.Payment;
 
 /**
  * 

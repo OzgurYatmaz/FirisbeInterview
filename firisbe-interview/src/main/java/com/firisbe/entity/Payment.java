@@ -1,4 +1,8 @@
-package com.firisbe.model;
+/**
+ * This package is for automatic creation of database tables by JPA.
+ * And objects of the classes classes here are used by JPA for database operations.
+ */
+package com.firisbe.entity;
 
 import java.time.LocalDateTime;
 
@@ -11,6 +15,18 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+
+/**
+ * 
+ * This class is auto converted to table in database automatically by JPA
+ * Corresponding table name is cards and payment info of customers are kept there.
+ * 
+ * 
+ * @author Ozgur Yatmaz
+ * @version 1.0.0
+ * @since 2024-05-06
+ * 
+ */
 
 @Entity
 @Table(name = "payments")

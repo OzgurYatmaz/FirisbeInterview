@@ -1,9 +1,25 @@
-package com.firisbe.model;
+/**
+ * This package is for data transfer objects (DTO) to transfer data over web
+ */
+package com.firisbe.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
+
+/**
+ * 
+ * Objects of this class are used to transfer data over web.
+ * Request body of make payment operation
+ * 
+ * @see com.firisbe.controller.PaymentController.makePayment(PaymentRequestDTO)
+ * 
+ * @author Ozgur Yatmaz
+ * @version 1.0.0
+ * @since 2024-05-06
+ * 
+ */
 
 @Schema(description = "Payment Request Model Information")
 public class PaymentRequestDTO {

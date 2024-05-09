@@ -1,6 +1,5 @@
 /**
  * This package contains classes for all controllers of the project
- * .
  */
 package com.firisbe.controller;
 
@@ -16,8 +15,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.firisbe.dto.AddCustomerRequestDTO;
+import com.firisbe.entity.Customer;
 import com.firisbe.error.ErrorDetails;
-import com.firisbe.model.Customer;
 import com.firisbe.service.CustomerService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -78,7 +78,7 @@ public class CustomerController {
 			@ApiResponse(responseCode = "409", description = "When submitted data is in conflict with existing data in database or with itself", content = {
 					@Content(schema = @Schema(implementation = ErrorDetails.class)) }) })
 	@PostMapping("/add-customer")
-	public ResponseEntity<String> addCustomer(@Valid @RequestBody Customer customer) throws Exception {
+	public ResponseEntity<String> addCustomer(@Valid @RequestBody AddCustomerRequestDTO customer) throws Exception {
 
 		Customer addedCustomer = null;
 

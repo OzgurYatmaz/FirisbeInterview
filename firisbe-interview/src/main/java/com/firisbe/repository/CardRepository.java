@@ -1,15 +1,27 @@
+/**
+ * This is package for interfaces responsible for database operations
+ */
 package com.firisbe.repository;
 
 import java.util.List;
 
 import org.springframework.transaction.annotation.Transactional;
 
+import com.firisbe.entity.Card;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
-import com.firisbe.model.Card;
-
+/**
+ * 
+ * Card related operations in database are done here
+ * 
+ * @author Ozgur Yatmaz
+ * @version 1.0.0
+ * @since 2024-05-08
+ * 
+ */
 
 public interface CardRepository extends JpaRepository<Card, Integer> {
 
@@ -45,4 +57,3 @@ public interface CardRepository extends JpaRepository<Card, Integer> {
 	public int updateBalanceAfterPayment(Integer cardId, double amount);
 
 }
-	

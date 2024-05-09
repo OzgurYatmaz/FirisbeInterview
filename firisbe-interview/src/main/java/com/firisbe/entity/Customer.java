@@ -1,11 +1,14 @@
-package com.firisbe.model;
+/**
+ * This package is for automatic creation of database tables by JPA.
+ * And objects of the classes classes here are used by JPA for database operations.
+ */
+package com.firisbe.entity;
 
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -14,35 +17,33 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
+
+/**
+ * 
+ * This class is auto converted to table in database automatically by JPA
+ * Corresponding table name is customers and customer info is kept there.
+ * 
+ * 
+ * @author Ozgur Yatmaz
+ * @version 1.0.0
+ * @since 2024-05-06
+ * 
+ */
 
 @Entity
 @Table(name = "customers")
-@Schema(description = "Customer Model Information")
 public class Customer {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@JsonIgnore
 	private Integer id;
-	@NotNull(message = "Custmer  name cannot be null")
-	@NotBlank(message = "Customer name may not be empty or blank")
-	@Schema(description = "Customer's name", example = "Ozgur")
 	private String name;
-	@NotNull(message = "Custmer  number cannot be null")
-	@NotBlank(message = "Customer Number may not be empty or blank")
-	@Schema(description = "Unique customer number for name conflict", example = "114-1")
 	private String customerNumber;
-	@NotNull(message = "Email cannot be null")
-	@Email(message = "Invalid email")
-	@Schema(description = "Customer's email address must be unique", example = "ozguryatmaz@yandex.com")
 	private String email;
 
 	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true) // so that customer_ıd column will be created in card
 	@JoinColumn(name = "customer_id") // This creates a foreign key column in the Card table
-	@JsonIgnore // not needed to be returned in response
 	private List<Card> cards;
 
 	// No-argument constructor (for JPA)
