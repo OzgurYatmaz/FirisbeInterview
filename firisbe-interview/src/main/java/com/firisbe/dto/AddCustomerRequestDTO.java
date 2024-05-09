@@ -1,5 +1,5 @@
 /**
- * This package is for data transfer objects (DTO) to transfer data over web
+ * This package is for data transfer objects (DTO) to transfer data over web while communicating with this API
  */
 package com.firisbe.dto;
 
@@ -36,7 +36,7 @@ public class AddCustomerRequestDTO {
 	private String name;
 	@NotNull(message = "Custmer  number cannot be null")
 	@NotBlank(message = "Customer Number may not be empty or blank")
-	@Schema(description = "Unique customer number for name conflict", example = "114-1")
+	@Schema(description = "Unique customer number", example = "114-1")
 	private String customerNumber;
 	@NotNull(message = "Email cannot be null")
 	@Email(message = "Invalid email")

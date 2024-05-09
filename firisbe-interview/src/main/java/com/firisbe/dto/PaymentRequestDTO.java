@@ -1,5 +1,5 @@
 /**
- * This package is for data transfer objects (DTO) to transfer data over web
+ * This package is for data transfer objects (DTO) to transfer data over web while communicating with this API
  */
 package com.firisbe.dto;
 

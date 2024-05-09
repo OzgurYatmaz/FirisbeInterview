@@ -7,6 +7,7 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 import org.apache.commons.lang3.ObjectUtils;
 import org.slf4j.Logger;
@@ -16,13 +17,17 @@ import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 
 import com.firisbe.configuration.PaymentServiceConfig;
+import com.firisbe.dto.CustomerDTO;
+import com.firisbe.dto.PaymentDTO;
 import com.firisbe.dto.PaymentRequestDTO;
 import com.firisbe.entity.Card;
+import com.firisbe.entity.Customer;
 import com.firisbe.entity.Payment;
 import com.firisbe.error.DataInsertionConftlictException;
 import com.firisbe.error.ExternalServiceException;
@@ -207,14 +212,15 @@ public class PaymentService {
 	 * @throws RecordsNotBeingFetchedException is thrown if there is a failure in reaching database records.
 	 * 
 	 */
-	public List<Payment> findPaymentsBySearchCriteria(String cardNumber, String customerNumber) throws Exception {
+	public List<PaymentDTO> findPaymentsBySearchCriteria(String cardNumber, String customerNumber) throws Exception {
 
 		if(StringUtils.isEmpty(customerNumber) && StringUtils.isEmpty(cardNumber)) {
 			throw new ParametersNotProvidedException("Both Arguments cannot be empty","Please provide cardNumber or customerNumber or both");
 		}
-		List<Payment> payments;
+		List<Payment> paymentsFetched;
 		try {
-			payments = paymentRepository.findByCardNumberOrCustomerNumber(customerNumber, cardNumber);
+			paymentsFetched = paymentRepository.findByCardNumberOrCustomerNumber(customerNumber, cardNumber);
+			List<PaymentDTO> payments = convertPaymentEntityToDTO(paymentsFetched);
 			return payments;
 		} catch (Exception e) {
 			LOGGER.error("Error occurred while fetching payment records from DB: ", e);
@@ -223,6 +229,7 @@ public class PaymentService {
 		}
 	}
 
+	
 	/**
 	 * 
 	 * Fetches payment records for time interval between startDate and endDate.
@@ -233,17 +240,46 @@ public class PaymentService {
 	 *  @throws RecordsNotBeingFetchedException is thrown if there is a failure in reaching database records.
 	 *  
 	 */
-	public List<Payment> getAllPaymentsbyDateInterval(LocalDate startDate, LocalDate endDate) throws Exception {
-		List<Payment> payments;
+	public List<PaymentDTO> getAllPaymentsbyDateInterval(LocalDate startDate, LocalDate endDate) throws Exception {
+		List<Payment> paymentsFetched;
 		try {
-			payments = paymentRepository.getAllPaymentsBetweenDates(convertToLocalDateTime(startDate),
+			paymentsFetched = paymentRepository.getAllPaymentsBetweenDates(convertToLocalDateTime(startDate),
 					convertToLocalDateTime(endDate));
+			List<PaymentDTO> payments = convertPaymentEntityToDTO(paymentsFetched);
 			return payments;
 		} catch (Exception e) {
 			LOGGER.error("Error occurred while fetching payment records from data base: ", e);
 			throw new RecordsNotBeingFetchedException("Error occured while fetching payment records from data base",
 					e.getMessage());
 		}
+	}
+
+	/**
+	 * 
+	 * Entity object fetched from database is converted to DTO object for web service return.
+	 * 
+	 * @param List of entity objects fetched from database.
+	 * 
+	 * @return List of DTO objects for API return type.
+	 * 
+	 * 
+	 */
+	private List<PaymentDTO> convertPaymentEntityToDTO(List<Payment> paymentsFetched) {
+		if (!CollectionUtils.isEmpty(paymentsFetched)) {
+			List<PaymentDTO> paymentsForResponse = new ArrayList<PaymentDTO>();
+			for (Payment p : paymentsFetched) {
+				PaymentDTO tempPayment = new PaymentDTO();
+				tempPayment.setAmount(p.getAmount());
+				tempPayment.setCustomerNumber(p.getCustomerNumber());
+				tempPayment.setCardNumber(p.getCardNumber());
+				tempPayment.setPaymentDate(p.getPaymentDate());
+				paymentsForResponse.add(tempPayment);
+			}
+
+			return paymentsForResponse;
+
+		}
+		return null;
 	}
 
 	/**

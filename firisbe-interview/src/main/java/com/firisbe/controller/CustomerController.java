@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.firisbe.dto.AddCustomerRequestDTO;
+import com.firisbe.dto.CustomerDTO;
 import com.firisbe.entity.Customer;
 import com.firisbe.error.ErrorDetails;
 import com.firisbe.service.CustomerService;
@@ -106,13 +107,13 @@ public class CustomerController {
 	 */
 	@Operation(summary = "Fetch all customers", description = "Fetches all customers exist in our database")
 	@ApiResponses({ @ApiResponse(responseCode = "200", content = {
-			@Content(array = @ArraySchema(schema = @Schema(implementation = Customer.class)), mediaType = "application/json") }),
+			@Content(array = @ArraySchema(schema = @Schema(implementation = CustomerDTO.class)), mediaType = "application/json") }),
 			@ApiResponse(responseCode = "500", description = "When error being occured during querying database", content = {
 					@Content(schema = @Schema(implementation = ErrorDetails.class)) }) })
 	@GetMapping("/get-all-customers")
-	public List<Customer> getAllCustomers() throws Exception {
+	public List<CustomerDTO> getAllCustomers() throws Exception {
 
-		List<Customer> allCustomers = null;
+		List<CustomerDTO> allCustomers = null;
 
 		try {
 			allCustomers = customerService.getAllCustomers();

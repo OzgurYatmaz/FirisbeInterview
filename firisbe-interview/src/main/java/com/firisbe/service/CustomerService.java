@@ -16,6 +16,7 @@ import org.springframework.util.CollectionUtils;
 
 import com.firisbe.dto.AddCustomerRequestDTO;
 import com.firisbe.dto.CardDTO;
+import com.firisbe.dto.CustomerDTO;
 import com.firisbe.entity.Card;
 import com.firisbe.entity.Customer;
 import com.firisbe.error.DataInsertionConftlictException;
@@ -28,8 +29,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Main customer service's business logic to add to database and fetch customers from
- * database
+ * Main customer service's business logic to add to database and fetch customers
+ * from database
  * 
  * @throws Various exceptions explaining the reasons of failures.
  * 
@@ -62,18 +63,47 @@ public class CustomerService {
 	 * 
 	 * Fetches all customers registered in database
 	 * 
-	 * @throws RecordsNotBeingFetchedException if records could not be fetched from database.
+	 * @throws RecordsNotBeingFetchedException if records could not be fetched from
+	 *                                         database.
 	 * 
 	 */
-	public List<Customer> getAllCustomers() throws Exception {
+	public List<CustomerDTO> getAllCustomers() throws Exception {
 		try {
-			List<Customer> customers = customerRepository.findAll();
+			List<Customer> customersFetched = customerRepository.findAll();
+			List<CustomerDTO> customers = convertCustomerEntityToDTO(customersFetched);
 			return customers;
 		} catch (Exception e) {
 			LOGGER.error("Error occurred while retrieving customers", e);
 			throw new RecordsNotBeingFetchedException("Error occurred while retrieving customers!", e.getMessage());
 		}
 
+	}
+
+	/**
+	 * 
+	 * Entity object fetched from database is converted to DTO object for web service return.
+	 * 
+	 * @param entity object fetched from database.
+	 * 
+	 * @return DTO object for API return type.
+	 * 
+	 * 
+	 */
+	private List<CustomerDTO> convertCustomerEntityToDTO(List<Customer> customersFetched) {
+		if (!CollectionUtils.isEmpty(customersFetched)) {
+			List<CustomerDTO> customers = new ArrayList<CustomerDTO>();
+			for (Customer c : customersFetched) {
+				CustomerDTO tempCustomer = new CustomerDTO();
+				tempCustomer.setCustomerNumber(c.getCustomerNumber());
+				tempCustomer.setName(tempCustomer.getName());
+				tempCustomer.setEmail(c.getEmail());
+				customers.add(tempCustomer);
+			}
+
+			return customers;
+
+		}
+		return null;
 	}
 
 	/**
@@ -135,15 +165,15 @@ public class CustomerService {
 	 * 
 	 */
 	private Customer convertDTO_To_Entity(AddCustomerRequestDTO addCustomerRequest) {
-		
+
 		Customer customer = new Customer();
 		customer.setName(addCustomerRequest.getName());
 		customer.setEmail(addCustomerRequest.getEmail());
 		customer.setCustomerNumber(addCustomerRequest.getCustomerNumber());
 		List<CardDTO> cards = addCustomerRequest.getCards();
-		if(!CollectionUtils.isEmpty(cards)) {
+		if (!CollectionUtils.isEmpty(cards)) {
 			List<Card> newCards = new ArrayList<Card>();
-			for(CardDTO card : cards) {
+			for (CardDTO card : cards) {
 				Card tempCard = new Card();
 				tempCard.setCardNumber(card.getCardNumber());
 				tempCard.setCustomerNumber(addCustomerRequest.getCustomerNumber());
