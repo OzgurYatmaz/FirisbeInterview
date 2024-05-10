@@ -72,7 +72,7 @@ public class PaymentController {
 	 *      might be thrown from here
 	 * 
 	 */
-	@Operation(summary = "Make Payment", description = "Sends payment request to external payment service and records the paymet details")
+	@Operation(summary = "Make Payment from balance of the card", description = "Sends payment request to external payment service and records the paymet details")
 	@ApiResponses({ @ApiResponse(responseCode = "200", description = "When payment is made succesfully"),
 			@ApiResponse(responseCode = "500", description = "When external payment service provider retuning diffrent code implying unsucessfull payment", content = {
 					@Content(schema = @Schema(implementation = ErrorDetails.class)) }),

@@ -1,5 +1,5 @@
 /**
- * This package contains classes for services
+ * This package contains classes for services - business logics
  */
 package com.firisbe.service;
 
@@ -23,13 +23,10 @@ import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 
 import com.firisbe.configuration.PaymentServiceConfig;
-import com.firisbe.dto.CustomerDTO;
 import com.firisbe.dto.PaymentDTO;
 import com.firisbe.dto.PaymentRequestDTO;
 import com.firisbe.entity.Card;
-import com.firisbe.entity.Customer;
 import com.firisbe.entity.Payment;
-import com.firisbe.error.DataInsertionConftlictException;
 import com.firisbe.error.ExternalServiceException;
 import com.firisbe.error.InsufficientCardBalanceException;
 import com.firisbe.error.ParametersNotProvidedException;
@@ -102,8 +99,6 @@ public class PaymentService {
 			throw new InsufficientCardBalanceException("Card balance is insufficient for this payment",
 					"Not enough money in card balance");
 		}
-		// Create payment record object for inserting payment info to database.
-		Payment payment = preparePaymetRecordForDataBase(paymentRequest, card);
 
 		ResponseEntity<String> responseEntity = null;
 		try {
@@ -120,6 +115,8 @@ public class PaymentService {
 
 		}
 
+		// Create payment record object for inserting payment info to database.
+		Payment payment = preparePaymetRecordForDataBase(paymentRequest, card);
 		processExternalResponse(payment, responseEntity, card.getId());
 	}
 
@@ -209,9 +206,11 @@ public class PaymentService {
 	 * @param cutomerNumber if it is null it will be disregarded in repository.
 	 * @param cardNumber    if it is null  it will be disregarded in repository.
 	 * 
-	 * @throws RecordsNotBeingFetchedException is thrown if there is a failure in reaching database records.
+	 * @throws RecordsNotBeingFetchedException if there is a failure in reaching database records.
+	 * @throws ParametersNotProvidedException if both of the parameters are not supplied
 	 * 
 	 */
+	@SuppressWarnings("deprecation")
 	public List<PaymentDTO> findPaymentsBySearchCriteria(String cardNumber, String customerNumber) throws Exception {
 
 		if(StringUtils.isEmpty(customerNumber) && StringUtils.isEmpty(cardNumber)) {

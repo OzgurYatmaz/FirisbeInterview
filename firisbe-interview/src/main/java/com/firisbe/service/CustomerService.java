@@ -95,7 +95,7 @@ public class CustomerService {
 			for (Customer c : customersFetched) {
 				CustomerDTO tempCustomer = new CustomerDTO();
 				tempCustomer.setCustomerNumber(c.getCustomerNumber());
-				tempCustomer.setName(tempCustomer.getName());
+				tempCustomer.setName(c.getName());
 				tempCustomer.setEmail(c.getEmail());
 				customers.add(tempCustomer);
 			}
