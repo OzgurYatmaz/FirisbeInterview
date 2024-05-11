@@ -1,42 +1,41 @@
-# Spring Boot Project for Firisbe Interview 
-This is a case project for Job interview which simulates a payment service.  
-Project description document is  <a href=API-Documents/Firisbe_java_case_study(mid).pdf>here</a> <br>
-Improved version of the project is <a href=https://github.com/OzgurYatmaz/MultiPayAPI>here</a> (External payment service providers are as many as needed and selectable at request)
+# Spring Boot Project for Firisbe Interview
 
-### How to run the project
+This is a case project for a job interview which simulates a payment service. 
+The project description document is [here](API-Documents/Firisbe_java_case_study(mid).pdf).
 
-1. Build a Jar with maven install command at /target/firisbe-interview-1.0.0.jar
-2. Copy the jar to desired location
-2. Run the jar with comand: java -jar firisbe-interview-1.0.0.jar
+The improved version of the project is [here](https://github.com/OzgurYatmaz/MultiPayAPI) (External payment service providers are as many as needed and selectable at request).
 
-### How to run the project in IDE
+### How to Run the Project
 
-1. Import the project as existing maven projects 
-2. Run com.firisbe.FirisbeInterviewApplication as a Java Application.
+1. Build a Jar with maven install command at `/target/firisbe-interview-1.0.0.jar`.
+2. Copy the jar to desired location.
+3. Run the jar with command: `java -jar firisbe-interview-1.0.0.jar`.
 
-### How to test api
-1. Create scheama in mysql database with following command "CREATE SCHEMA `firisbe-payment"
-2. Use the Mockoon collection provided <a href=API-Documents/Mockoon%20Collection%20for%20Mock%20Service>here</a> to mock sample external payment service provider
-3. Use the url below or provided postman collection provided in API-Documents folder  <br>
-   http://localhost:8080/swagger-ui/index.html
+### How to Run the Project in IDE
 
+1. Import the project as existing Maven projects.
+2. Run `com.firisbe.FirisbeInterviewApplication` as a Java Application.
+
+### How to Test API
+
+1. Create schema in MySQL database with following command: `CREATE SCHEMA 'firisbe-payment'`.
+2. Use the Mockoon collection provided [here](API-Documents/Mockoon%20Collection%20for%20Mock%20Service) to mock a sample external payment service provider.
+3. Use the URL below or provided Postman collection provided in API-Documents folder: http://localhost:8080/swagger-ui/index.html
 
 ### Online Document
 
-1. Use the link below to see published online swagger document:<br>
+1. Use the link below to see published online Swagger document: [here](https://app.swaggerhub.com/apis-docs/ozguryatmaz/secure-pay_api_for_firisbe_interview/1.0).
 
-https://app.swaggerhub.com/apis-docs/ozguryatmaz/secure-pay_api_for_firisbe_interview/1.0
+### Test Tools, Reports and More
 
-### Test tools, Reports and More
-
-1.  <a href=API-Documents>Test Reports Tools and More</a><br>
+1. [Test Reports Tools and More](API-Documents)
 
 ### Tech Stack:
 
-Language: Java 17 <br>
-Framework: Spring Boot 3.2.5 <br>
-Database: MySql <br>
-DB Management: Spring Data JPA <br>
-Unit Tests: JUnit and Maven Surefire for functionality test reports <br>
-Documentation: Swagger 3 (OPenAPI) <br>
-Build Tool: Maven 
+- Language: Java 17
+- Framework: Spring Boot 3.2.5
+- Database: MySQL
+- DB Management: Spring Data JPA
+- Unit Tests: JUnit and Maven Surefire for functionality test reports
+- Documentation: Swagger 3 (OpenAPI)
+- Build Tool: Maven 
