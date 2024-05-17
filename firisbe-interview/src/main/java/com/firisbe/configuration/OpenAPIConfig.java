@@ -8,6 +8,9 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Contact;
@@ -77,4 +80,24 @@ public class OpenAPIConfig {
 
 		return new OpenAPI().info(info).servers(List.of(devServer, prodServer));
 	}
+	
+
+	/**
+	 * 
+	 * For Disabling CORS for swagger tests from docker container
+	 * 
+	 */
+	@Bean
+    public CorsFilter corsFilter() {
+            UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+
+            CorsConfiguration config = new CorsConfiguration();
+            config.setAllowCredentials(true);
+            config.addAllowedOrigin("*");
+            config.addAllowedHeader("*");
+            config.addAllowedMethod("*");
+
+            source.registerCorsConfiguration("/v3/api-docs", config);
+            return new CorsFilter(source);
+    }
 }

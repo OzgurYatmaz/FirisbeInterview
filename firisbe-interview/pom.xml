@@ -75,7 +75,7 @@
 					</execution>
 				</executions>
 				<configuration>
-					<testFailureIgnore>true</testFailureIgnore>
+<!--					<testFailureIgnore>true</testFailureIgnore>-->
 				</configuration>
 			</plugin>
 		</plugins>
