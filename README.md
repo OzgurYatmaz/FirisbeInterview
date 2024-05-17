@@ -20,11 +20,18 @@ The improved version of the project is [here](https://github.com/OzgurYatmaz/Mul
 
 1. Create schema in MySQL database with following command: `CREATE SCHEMA 'firisbe-payment'`.
 2. Use the Mockoon collection provided [here](API-Documents/Mockoon%20Collection%20for%20Mock%20Service) to mock a sample external payment service provider.
-3. Use the URL below or provided Postman collection provided in API-Documents folder: http://localhost:8080/swagger-ui/index.html
+3. Use the URL below to test with swagger: <br>
+   http://localhost:8080/swagger-ui/index.html
 
 ### Online Document
 
-1. Use the link below to see published online Swagger document: [here](https://app.swaggerhub.com/apis-docs/ozguryatmaz/secure-pay_api_for_firisbe_interview/1.0).
+1. Use the link below to see published online Swagger document: <br>
+   https://app.swaggerhub.com/apis-docs/ozguryatmaz/secure-pay_api_for_firisbe_interview/1.0
+
+### Docker Image
+
+1. Use the link below to see published Docker image: <br>
+   https://hub.docker.com/r/ozguryatmaz/firisbe-interview-h2
 
 ### Test Tools, Reports and More
 
