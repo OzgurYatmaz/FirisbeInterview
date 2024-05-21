@@ -31,7 +31,7 @@ The improved version of the project is [here](https://github.com/OzgurYatmaz/Mul
 ### Docker Image
 
 1. Use the link below to see published Docker image: <br>
-   https://hub.docker.com/r/ozguryatmaz/firisbe-interview-h2
+   https://hub.docker.com/r/ozguryatmaz/firisbe-interview
 
 ### Test Tools, Reports and More
 
