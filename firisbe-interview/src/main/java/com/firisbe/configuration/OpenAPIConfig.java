@@ -3,23 +3,15 @@
  */
 package com.firisbe.configuration;
 
-import java.util.List;
-
-import org.springdoc.core.models.GroupedOpenApi;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Contact;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.info.License;
-import io.swagger.v3.oas.models.servers.Server;
 
 /**
  * Swagger configuration is made from here.
@@ -37,14 +29,7 @@ import io.swagger.v3.oas.models.servers.Server;
 @Configuration
 public class OpenAPIConfig  {
 
-	@Value("${openapi.dev-url}")
-	private String devUrl;
-
-	@Value("${openapi.prod-url}")
-	private String prodUrl;
-	
-	@Value("${openapi.docker-url}")
-	private String dockerUrl;
+ 
 
 	/**
 	 * 
@@ -56,18 +41,7 @@ public class OpenAPIConfig  {
 	 */
 	@Bean
 	public OpenAPI myOpenAPI() {
-		Server devServer = new Server();
-		devServer.setUrl(devUrl);
-		devServer.setDescription("Server URL in Development Environment");
-
-		Server prodServer = new Server();
-		prodServer.setUrl(prodUrl);
-		prodServer.setDescription("Server URL in Production Environment");
-		
-		Server dockerServer = new Server();
-		dockerServer.setUrl(dockerUrl);
-		dockerServer.setDescription("Server URL in Docker Container");
-
+		 
 		Contact contact = new Contact();
 		contact.setEmail("ozguryatmaz@yandex.com");
 		contact.setName("Ozgur Yatmaz");
@@ -88,7 +62,6 @@ public class OpenAPIConfig  {
 						+ "     <br /> Build Tool: Maven")
 				.license(mitLicense);
 
-		//return new OpenAPI().info(info).servers(List.of(devServer, prodServer, dockerServer));
 		return new OpenAPI().info(info);
 	}
 	
