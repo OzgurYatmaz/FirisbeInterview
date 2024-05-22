@@ -33,7 +33,7 @@ The improved version of the project is [here](https://github.com/OzgurYatmaz/Mul
 1. Use the link below to see published Docker image: <br>
    https://hub.docker.com/r/ozguryatmaz/firisbe-interview <br>
    (Note: Docker internal port number is 8080)<br>
-   Run the command: `docker run -p any_port_number_you_wish_to_use:8080 image_id`
+   Run the command: `docker run -p any_port_number_you_wish_to_use:8080 image_id` after pulling the image.
    
 
 ### Test Tools, Reports and More
