@@ -22,7 +22,7 @@ The improved version of the project is [here](https://github.com/OzgurYatmaz/Mul
 1. Create schema in MySQL database with following command: `CREATE SCHEMA 'firisbe-payment'`. (Unless you run from Docker container)
 2. Use the Mockoon collection provided [here](API-Documents/Mockoon%20Collection%20for%20Mock%20Service) to mock a sample external payment service provider.
 3. Use the URL below to test with swagger: <br>
-   http://localhost:8080/swagger-ui/index.html
+   http://localhost:8080/swagger-ui/index.html (If you use docker container port number will be specified at docker run)
 
 ### Online Document
 
