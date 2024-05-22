@@ -7,6 +7,7 @@ The improved version of the project is [here](https://github.com/OzgurYatmaz/Mul
 
 ### How to Run the Project
 
+0. Use the docker image provided bellow or continue from the step 1 bellow:
 1. Build a Jar with maven install command at `/target/firisbe-interview-1.0.0.jar`.
 2. Copy the jar to desired location.
 3. Run the jar with command: `java -jar firisbe-interview-1.0.0.jar`.
@@ -18,7 +19,7 @@ The improved version of the project is [here](https://github.com/OzgurYatmaz/Mul
 
 ### How to Test API
 
-1. Create schema in MySQL database with following command: `CREATE SCHEMA 'firisbe-payment'`.
+1. Create schema in MySQL database with following command: `CREATE SCHEMA 'firisbe-payment'`. (Unless you run from Docker container)
 2. Use the Mockoon collection provided [here](API-Documents/Mockoon%20Collection%20for%20Mock%20Service) to mock a sample external payment service provider.
 3. Use the URL below to test with swagger: <br>
    http://localhost:8080/swagger-ui/index.html
