@@ -15,75 +15,71 @@ import io.swagger.v3.oas.models.info.License;
 
 /**
  * Swagger configuration is made from here.
- * 
- * Use the link {@link http://localhost:8080/swagger-ui/index.html} to see
- * swagger page of the project.
- * 
+ * <p>
+ * Use the link {@link http://localhost:8080/swagger-ui/index.html} to see swagger page of the
+ * project.
+ * <p>
  * OpenApi is new name for Swagger 3
- * 
+ *
  * @author Ozgur Yatmaz
  * @version 1.0.0
  * @since 2024-05-08
- * 
  */
 @Configuration
-public class OpenAPIConfig  {
+public class OpenAPIConfig {
 
- 
 
-	/**
-	 * 
-	 * Creates bean of swagger UI object for swagger UI.
-	 * General API info is set here.
-	 * 
-	 * @return OpenApi object to be used by swagger api internally
-	 * 
-	 */
-	@Bean
-	public OpenAPI myOpenAPI() {
-		 
-		Contact contact = new Contact();
-		contact.setEmail("ozguryatmaz@yandex.com");
-		contact.setName("Ozgur Yatmaz");
-		contact.setUrl("https://www.linkedin.com/in/ozguryatmaz");
+  /**
+   * Creates bean of swagger UI object for swagger UI. General API info is set here.
+   *
+   * @return OpenApi object to be used by swagger api internally
+   */
+  @Bean
+  public OpenAPI myOpenAPI() {
 
-		License mitLicense = new License().name("MIT License").url("https://choosealicense.com/licenses/mit/");
+    Contact contact = new Contact();
+    contact.setEmail("ozguryatmaz@yandex.com");
+    contact.setName("Ozgur Yatmaz");
+    contact.setUrl("https://www.linkedin.com/in/ozguryatmaz");
 
-		Info info = new Info().title("SecurePay API for Firisbe Interview").version("1.0").contact(contact).description(
-				"This API exposes endpoints to use sample payment service. Service anables saving customers and cards of the customers to mysql database "
-						+ "and requesting payments to any external payment service providers. And if external payment service"
-						+ " confirms that the payment is made card balance is updated and payment is recorded to payments table."
-						+ " Lastly, all payments can be queried by date interval or curtomer number or card number.<br />\r\n"
-						+ "     <br /> Tech Stack:\r\n" + "     <br />\r\n" + "     <br /> Language: Java 17\r\n"
-						+ "     <br /> Framework: Spring Boot 3.2.5\r\n" + "     <br /> Database: MySql\r\n"
-						+ "     <br /> DB Management: Spring Data JPA\r\n"
-						+ "     <br /> Unit Tests: JUnit and Maven Surefire for test reports\r\n"
-						+ "     <br /> Documentation: Swagger 3 - (OpenAPI) \r\n"
-						+ "     <br /> Build Tool: Maven")
-				.license(mitLicense);
+    License mitLicense = new License().name("MIT License")
+        .url("https://choosealicense.com/licenses/mit/");
 
-		return new OpenAPI().info(info);
-	}
-	
+    Info info = new Info().title("SecurePay API for Firisbe Interview").version("1.0")
+        .contact(contact).description(
+            "This API exposes endpoints to use sample payment service. Service anables saving customers and cards of the customers to mysql database "
+                + "and requesting payments to any external payment service providers. And if external payment service"
+                + " confirms that the payment is made card balance is updated and payment is recorded to payments table."
+                + " Lastly, all payments can be queried by date interval or curtomer number or card number.<br />\r\n"
+                + "     <br /> Tech Stack:\r\n" + "     <br />\r\n"
+                + "     <br /> Language: Java 17\r\n"
+                + "     <br /> Framework: Spring Boot 3.2.5\r\n" + "     <br /> Database: H2\r\n"
+                + "     <br /> DB Management: Spring Data JPA\r\n"
+                + "     <br /> Unit Tests: JUnit and Maven Surefire for test reports\r\n"
+                + "     <br /> Documentation: Swagger 3 - (OpenAPI) \r\n"
+                + "     <br /> Build Tool: Maven")
+        .license(mitLicense);
 
-	/**
-	 * 
-	 * For Disabling CORS for swagger tests from docker container
-	 * 
-	 */
-	@Bean
-    public CorsFilter corsFilter() {
-            UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+    return new OpenAPI().info(info);
+  }
 
-            CorsConfiguration config = new CorsConfiguration();
-            config.setAllowCredentials(true);
-            config.addAllowedOrigin("*");
-            config.addAllowedHeader("*");
-            config.addAllowedMethod("*");
 
-            source.registerCorsConfiguration("/v3/api-docs", config);
-            return new CorsFilter(source);
-    }
-	 
-	
+  /**
+   * For Disabling CORS for swagger tests from docker container
+   */
+  @Bean
+  public CorsFilter corsFilter() {
+    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+
+    CorsConfiguration config = new CorsConfiguration();
+    config.setAllowCredentials(true);
+    config.addAllowedOrigin("*");
+    config.addAllowedHeader("*");
+    config.addAllowedMethod("*");
+
+    source.registerCorsConfiguration("/v3/api-docs", config);
+    return new CorsFilter(source);
+  }
+
+
 }
