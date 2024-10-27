@@ -49,7 +49,7 @@ import org.springframework.transaction.annotation.Transactional;
 @TestInstance(Lifecycle.PER_CLASS)//needed for cleaning database records function
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-class FirisbeInterviewApplicationTests {
+class FirisbeInterviewApplicationUnitTests {
 
 
 	/**

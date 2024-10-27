@@ -4,6 +4,9 @@
 package com.firisbe.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * 
@@ -15,7 +18,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
  * @since 2024-05-06
  * 
  */
-
+@NoArgsConstructor
+@AllArgsConstructor
 @Schema(description = "Customer DTO for fetch all customers response")
 public class CustomerDTO {
 
