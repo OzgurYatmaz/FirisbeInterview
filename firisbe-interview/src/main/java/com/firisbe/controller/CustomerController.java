@@ -5,6 +5,7 @@ package com.firisbe.controller;
 
 import java.util.List;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -47,6 +48,7 @@ import jakarta.validation.Valid;
 @Tag(name = "Customer controller", description = "Add  and fetch customers")
 @RestController
 @RequestMapping("/customer")
+@RequiredArgsConstructor
 public class CustomerController {
 
 	/**
@@ -54,10 +56,11 @@ public class CustomerController {
 	 * Customer related operations will be done with this
 	 * 
 	 */
-	@Autowired
-	public CustomerService customerService;
+	private final CustomerService customerService;
 
-	/**
+
+
+  /**
 	 * 
 	 * Adds customer to database if customer object includes cards it will also adds
 	 * cards to database if no cards provided it will associate one default card to

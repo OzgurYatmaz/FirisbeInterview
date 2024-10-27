@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.firisbe.dto.PaymentDTO;
 import com.firisbe.dto.PaymentRequestDTO;
-import com.firisbe.entity.Payment;
 import com.firisbe.error.ErrorDetails;
 import com.firisbe.error.RecordsNotBeingFetchedException;
 import com.firisbe.service.PaymentService;

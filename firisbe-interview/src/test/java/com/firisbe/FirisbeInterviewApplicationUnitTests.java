@@ -49,7 +49,7 @@ import org.springframework.transaction.annotation.Transactional;
 @TestInstance(Lifecycle.PER_CLASS)//needed for cleaning database records function
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-class FirisbeInterviewApplicationTests {
+class FirisbeInterviewApplicationUnitTests {
 
 
 	/**
@@ -94,6 +94,7 @@ class FirisbeInterviewApplicationTests {
 	 * Clears all records in database to make it ready for tests
 	 * 
 	 */
+//	@Disabled
     @BeforeAll
     @Transactional
 	void prepereingDBForTests() {
@@ -195,7 +196,7 @@ class FirisbeInterviewApplicationTests {
 	 * 
 	 */
 	@Test
-//	@Disabled
+	@Disabled
 	@DisplayName("Make 3 payments")
 	@Order(4)
 	void makePaymentTest() {
@@ -226,7 +227,7 @@ class FirisbeInterviewApplicationTests {
 	 * 
 	 */
 	@Test
-//	@Disabled
+	@Disabled
 	@DisplayName("Fetch by customerNumber")
 	@Order(5)
 	void findPaymentsByCustomerNumber() {
@@ -244,7 +245,7 @@ class FirisbeInterviewApplicationTests {
 	 * 
 	 */
 	@Test
-//	@Disabled
+	@Disabled
 	@DisplayName("Fetch by  CardNumber")
 	@Order(6)
 	void findPaymentsByCardNumber() {
@@ -262,7 +263,7 @@ class FirisbeInterviewApplicationTests {
 	 * 
 	 */
 	@Test
-//	@Disabled
+	@Disabled
 	@DisplayName("Fetch by customerNumber and CardNumber")
 	@Order(7)
 	void findPaymentsByCustomerNumberAndCardNumber() {

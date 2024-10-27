@@ -12,6 +12,9 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 
 /**
  * 
@@ -25,7 +28,8 @@ import jakarta.validation.constraints.NotNull;
  * @since 2024-05-09
  * 
  */
-
+@NoArgsConstructor
+@AllArgsConstructor
 @Schema(description = "Customer Model Information")
 public class AddCustomerRequestDTO {
 	
@@ -46,6 +50,36 @@ public class AddCustomerRequestDTO {
 	@JsonIgnore // not needed to be returned in response
 	@Schema(description = "Cards of customer")
 	private List<CardDTO> cards;
+
+
+	/**
+	 *
+	 * This is overwritten to invoke mock tests easily as equivalence of objects are needed
+	 * for mocking.
+	 *
+	 *
+	 * @author Ozgur Yatmaz
+	 * @version 1.0.0
+	 * @since 2024-10-27
+	 *
+	 */
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+		AddCustomerRequestDTO that = (AddCustomerRequestDTO) o;
+		return Objects.equals(name, that.name) && Objects.equals(customerNumber,
+				that.customerNumber) && Objects.equals(email, that.email);
+	}
+//
+//	@Override
+//	public int hashCode() {
+//		return Objects.hash(name, customerNumber, email);
+//	}
 
 	public String getName() {
 		return name;
@@ -80,10 +114,5 @@ public class AddCustomerRequestDTO {
 	public void setCards(List<CardDTO> cards) {
 		this.cards = cards;
 	}
-	
-	
-	
-	
-	
-	
+
 }
