@@ -46,5 +46,6 @@ The improved version of the project is [here](https://github.com/OzgurYatmaz/Mul
 - Database: H2 (Embedded DB)
 - DB Management: Spring Data JPA
 - Unit Tests: JUnit and Maven Surefire for functionality test reports
+- Integration Test are done with Mockito
 - Documentation: Swagger 3 (OpenAPI)
 - Build Tool: Maven 
