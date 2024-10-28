@@ -1,9 +1,10 @@
 /**
  * This package contains classes for services
  */
-package com.firisbe.service;
+package com.firisbe.serviceimpl;
 
 import com.firisbe.mapper.CustomerMapper;
+import com.firisbe.service.CustomerService;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -12,12 +13,10 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import com.firisbe.dto.AddCustomerRequestDTO;
-import com.firisbe.dto.CardDTO;
 import com.firisbe.dto.CustomerDTO;
 import com.firisbe.entity.Card;
 import com.firisbe.entity.Customer;

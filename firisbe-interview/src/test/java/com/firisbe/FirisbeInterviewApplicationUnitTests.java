@@ -28,7 +28,7 @@ import com.firisbe.entity.Payment;
 import com.firisbe.repository.CustomerRepository;
 import com.firisbe.repository.PaymentRepository;
 import com.firisbe.service.CustomerService;
-import com.firisbe.service.PaymentService;
+import com.firisbe.serviceimpl.PaymentServiceImp;
 
 import org.springframework.transaction.annotation.Transactional;
 
@@ -86,7 +86,7 @@ class FirisbeInterviewApplicationUnitTests {
 	 * 
 	 */
 	@Autowired
-	private PaymentService paymentService;
+	private PaymentServiceImp paymentServiceImp;
 
 
 	/**
@@ -212,9 +212,9 @@ class FirisbeInterviewApplicationUnitTests {
 		r3.setAmount(203.45);
 		
 		try {
-			paymentService.processPayment(r1);
-			paymentService.processPayment(r2);
-			paymentService.processPayment(r3);
+			paymentServiceImp.processPayment(r1);
+			paymentServiceImp.processPayment(r2);
+			paymentServiceImp.processPayment(r3);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

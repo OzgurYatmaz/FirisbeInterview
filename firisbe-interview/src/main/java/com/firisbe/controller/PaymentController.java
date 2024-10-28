@@ -20,7 +20,7 @@ import com.firisbe.dto.PaymentDTO;
 import com.firisbe.dto.PaymentRequestDTO;
 import com.firisbe.error.ErrorDetails;
 import com.firisbe.error.RecordsNotBeingFetchedException;
-import com.firisbe.service.PaymentService;
+import com.firisbe.serviceimpl.PaymentServiceImp;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -55,7 +55,7 @@ public class PaymentController {
 	 * Payment related operations will be done with this
 	 */
 	@Autowired
-	public PaymentService paymentService;
+	public PaymentServiceImp paymentServiceImp;
 
 	/**
 	 * 
@@ -84,7 +84,7 @@ public class PaymentController {
 	@PostMapping("/make-payment")
 	public ResponseEntity<String> makePayment(@Valid @RequestBody PaymentRequestDTO paymentRequest) throws Exception {
 		try {
-			paymentService.processPayment(paymentRequest);
+			paymentServiceImp.processPayment(paymentRequest);
 			return ResponseEntity.status(HttpStatus.OK).body("Payment is made ");
 
 		} catch (Exception e) {
@@ -114,7 +114,7 @@ public class PaymentController {
 	public ResponseEntity<List<PaymentDTO>> getPaymentsBySearchCriteria(@RequestParam(required = false) String cardNumber,
 			@RequestParam(required = false) String customerNumber) throws Exception {
 		try {
-			List<PaymentDTO> payments = paymentService.findPaymentsBySearchCriteria(cardNumber, customerNumber);
+			List<PaymentDTO> payments = paymentServiceImp.findPaymentsBySearchCriteria(cardNumber, customerNumber);
 			return ResponseEntity.ok(payments);
 
 		} catch (Exception e) {
@@ -145,7 +145,7 @@ public class PaymentController {
 			@RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate)
 			throws Exception {
 		try {
-			List<PaymentDTO> payments = paymentService.getAllPaymentsbyDateInterval(startDate, endDate);
+			List<PaymentDTO> payments = paymentServiceImp.getAllPaymentsbyDateInterval(startDate, endDate);
 			return ResponseEntity.ok(payments);
 
 		} catch (Exception e) {
