@@ -1,5 +1,6 @@
 package com.firisbe;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -18,10 +19,14 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.beans.factory.annotation.Autowired;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 /**
  *
@@ -43,12 +48,19 @@ public class IntegrationTestForCustomerService {
 
   @Test
   public void testGetAllCustomers() throws Exception {
-    List<CustomerDTO> mockCustomers = List.of(
+
+    List<CustomerDTO> customerDTOList = List.of(
         new CustomerDTO("ozgur yatmaz", "114-1", "o.y@firisby.com"),
         new CustomerDTO("ozgur2 yatmaz2", "114-2", "o2.y@firisby.com")
     );
 
-    when(customerService.getAllCustomers()).thenReturn(mockCustomers);
+// Define your Pageable (page number and size)
+    Pageable pageable = PageRequest.of(0, customerDTOList.size());
+
+// Create the Page object
+    Page<CustomerDTO> customerDTOPage = new PageImpl<>(customerDTOList, pageable, customerDTOList.size());
+
+    when(customerService.getAllCustomers(any(Pageable.class))).thenReturn(customerDTOPage);
 
     // Act & Assert: Test the endpoint with a valid ID
     mockMvc.perform(get("/customer/get-all-customers")
