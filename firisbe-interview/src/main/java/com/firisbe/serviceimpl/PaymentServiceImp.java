@@ -9,13 +9,10 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.List;
 import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.ObjectUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -25,7 +22,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
@@ -49,7 +45,6 @@ import com.firisbe.repository.PaymentRepository;
  *
  * @author Ozgur Yatmaz
  * @version 1.0.0
- * @throws Various exceptions explaining the reasons of failures.
  * @see com.firisbe.error.ResponseErrorHandler class to see possible errors might be thrown from
  * here
  * @since 2024-05-09
@@ -86,7 +81,7 @@ public class PaymentServiceImp implements PaymentService {
   /**
    * Processes payment by using external payment service provider
    *
-   * @param payment request object to carry payment data which consist of payment amount and card
+   * @param paymentRequest request object to carry payment data which consist of payment amount and card
    *                number
    * @throws various exceptions depending on the failure reason.
    */
@@ -105,7 +100,7 @@ public class PaymentServiceImp implements PaymentService {
           "Not enough money in card balance");
     }
 
-    ResponseEntity<String> responseEntity = null;
+    ResponseEntity<String> responseEntity;
     try {
 
       // Call the external payment service provider. Usually conversion is needed in
@@ -131,7 +126,6 @@ public class PaymentServiceImp implements PaymentService {
    * successful updates card balance from database and inserts payment record to database.
    *
    * @param payment object for recording the payment detail to database.
-   * @param payment response container received from external payment service provider.
    * @param cardId  to update card balance in database.
    * @throws ExternalServiceException if response status code is not 200.
    */
@@ -156,7 +150,7 @@ public class PaymentServiceImp implements PaymentService {
   /**
    * Sends payment request to external payment service provider.
    *
-   * @param payment request object to carry payment data which consist of payment amount and card
+   * @param externalRequest request object to carry payment data which consist of payment amount and card
    *                number for this simple case. In real life projects before calling external
    *                service; object conversion is done.
    * @throws ExternalServiceException if failure occurs during external service call.
@@ -189,7 +183,7 @@ public class PaymentServiceImp implements PaymentService {
    * Fetches payment records with cutomerNumber or cardNumber or both. Both of the parameters are
    * optional
    *
-   * @param cutomerNumber if it is null it will be disregarded in repository.
+   * @param customerNumber if it is null it will be disregarded in repository.
    * @param cardNumber    if it is null  it will be disregarded in repository.
    * @throws RecordsNotBeingFetchedException if there is a failure in reaching database records.
    * @throws ParametersNotProvidedException  if both of the parameters are not supplied
@@ -204,7 +198,6 @@ public class PaymentServiceImp implements PaymentService {
       throw new ParametersNotProvidedException("Both Arguments cannot be empty",
           "Please provide cardNumber or customerNumber or both");
     }
-    List<Payment> paymentsFetched;
     try {
       return paymentRepository.findByCardNumberOrCustomerNumber(customerNumber,
           cardNumber, pageable).map(mapper::convertPaymentEntityToDTO);
@@ -231,7 +224,6 @@ public class PaymentServiceImp implements PaymentService {
   public Page<PaymentDTO> getAllPaymentsbyDateInterval(LocalDate startDate, LocalDate endDate,
       Pageable pageable)
       throws Exception {
-    List<Payment> paymentsFetched;
     try {
       return paymentRepository.getAllPaymentsBetweenDates(
               convertToLocalDateTime(startDate),
@@ -248,7 +240,7 @@ public class PaymentServiceImp implements PaymentService {
   /**
    * Converts date object to local date time for further database querying.
    *
-   * @param dateObject of format: YYYY-MM-DD example: 2024-04-27
+   * @param date of format: YYYY-MM-DD example: 2024-04-27
    */
   private LocalDateTime convertToLocalDateTime(LocalDate date) {
     return LocalDateTime.of(date, LocalTime.MIDNIGHT);

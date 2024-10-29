@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
 /**
@@ -26,7 +25,7 @@ public abstract class CustomerMapper {
   /**
    * Entity object fetched from database is converted to DTO object for web service return.
    *
-   * @param entity object fetched from database.
+   * @param customersFetched: customers fetched from database.
    * @return DTO object for API return type.
    */
   @Mapping(target = "name", source = "name")
@@ -38,7 +37,7 @@ public abstract class CustomerMapper {
   /**
    * request dto object is being converted to entity object to be handled JPA.
    *
-   * @param request body object for transmitting data in web.
+   * @param addCustomerRequest body object for transmitting data in web.
    * @return customer entity object to be saved database by JPA.
    */
   public Customer convertDTO_To_Entity(AddCustomerRequestDTO addCustomerRequest) {
@@ -49,7 +48,7 @@ public abstract class CustomerMapper {
     customer.setCustomerNumber(addCustomerRequest.getCustomerNumber());
     List<CardDTO> cards = addCustomerRequest.getCards();
     if (!CollectionUtils.isEmpty(cards)) {
-      List<Card> newCards = new ArrayList<Card>();
+      List<Card> newCards = new ArrayList<>();
       for (CardDTO card : cards) {
         Card tempCard = new Card();
         tempCard.setCardNumber(card.getCardNumber());

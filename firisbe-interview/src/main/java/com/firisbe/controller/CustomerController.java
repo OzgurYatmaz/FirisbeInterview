@@ -3,14 +3,11 @@
  */
 package com.firisbe.controller;
 
-import java.util.List;
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -37,7 +34,6 @@ import jakarta.validation.Valid;
  *
  * @author Ozgur Yatmaz
  * @version 1.0.0
- * @throws Various exceptions explaining the reasons of failures.
  * @see com.firisbe.error.ResponseErrorHandler class to see possible errors might be thrown from
  * here
  * @since 2024-05-06
@@ -59,7 +55,7 @@ public class CustomerController {
    * Adds customer to database if customer object includes cards it will also adds cards to database
    * if no cards provided it will associate one default card to customer.
    *
-   * @param Customer object  with or without cards field
+   * @param customer object  with or without cards field
    * @return Http status code 200 with string message
    * @throws various exception to explaining why customer is not added.
    * @see com.firisbe.error.ResponseErrorHandler class to see possible errors might be thrown from
@@ -76,7 +72,7 @@ public class CustomerController {
   public ResponseEntity<String> addCustomer(@Valid @RequestBody AddCustomerRequestDTO customer)
       throws Exception {
 
-    Customer addedCustomer = null;
+    Customer addedCustomer;
 
     try {
       addedCustomer = customerService.addCustomer(customer);

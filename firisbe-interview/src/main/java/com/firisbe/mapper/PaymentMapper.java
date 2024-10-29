@@ -1,20 +1,12 @@
 package com.firisbe.mapper;
 
-import com.firisbe.dto.AddCustomerRequestDTO;
-import com.firisbe.dto.CardDTO;
-import com.firisbe.dto.CustomerDTO;
 import com.firisbe.dto.PaymentDTO;
 import com.firisbe.dto.PaymentRequestDTO;
 import com.firisbe.entity.Card;
-import com.firisbe.entity.Customer;
 import com.firisbe.entity.Payment;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.springframework.util.CollectionUtils;
 
 /**
  * Main  interface for list of conversion operations for customer service
@@ -32,9 +24,9 @@ public abstract class PaymentMapper {
    *
    * Prepares payment record object to create payment record in database.
    *
-   * @param payment request object to carry payment data which consist of payment
+   * @param paymentRequest request object to carry payment data which consist of payment
    *                amount and card number.
-   * @param CardDTO    object for card info from which payment will be done.
+   * @param card    object for card info from which payment will be done.
    *
    */
   public Payment preparePaymetRecordForDataBase(PaymentRequestDTO paymentRequest, Card card) {
@@ -53,7 +45,7 @@ public abstract class PaymentMapper {
   /**
    * Entity object fetched from database is converted to DTO object for web service return.
    *
-   * @param List of entity objects fetched from database.
+   * @param paymentsFetched of entity objects fetched from database.
    * @return List of DTO objects for API return type.
    */
   @Mapping(target = "amount", source = "amount")
