@@ -67,12 +67,15 @@ public class IntegrationTestForCustomerService {
             .contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().isOk())
         .andDo(print())
-        .andExpect(jsonPath("$[0].name").value("ozgur yatmaz"))
-        .andExpect(jsonPath("$[0].customerNumber").value("114-1"))
-        .andExpect(jsonPath("$[0].email").value("o.y@firisby.com"))
-        .andExpect(jsonPath("$[1].name").value("ozgur2 yatmaz2"))
-        .andExpect(jsonPath("$[1].customerNumber").value("114-2"))
-        .andExpect(jsonPath("$[1].email").value("o2.y@firisby.com"));
+        .andExpect(jsonPath("$.content[0].name").value("ozgur yatmaz"))
+        .andExpect(jsonPath("$.content[0].customerNumber").value("114-1"))
+        .andExpect(jsonPath("$.content[0].email").value("o.y@firisby.com"))
+        .andExpect(jsonPath("$.content[1].name").value("ozgur2 yatmaz2"))
+        .andExpect(jsonPath("$.content[1].customerNumber").value("114-2"))
+        .andExpect(jsonPath("$.content[1].email").value("o2.y@firisby.com"))
+        .andExpect(jsonPath("$.totalElements").value(customerDTOList.size()))
+        .andExpect(jsonPath("$.number").value(0))
+        .andExpect(jsonPath("$.size").value(customerDTOList.size()));
   }
 
   @Test
