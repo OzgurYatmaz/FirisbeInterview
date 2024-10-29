@@ -17,6 +17,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -194,7 +196,8 @@ public class PaymentServiceImp implements PaymentService {
    */
   @SuppressWarnings("deprecation")
   @Override
-  public List<PaymentDTO> findPaymentsBySearchCriteria(String cardNumber, String customerNumber)
+  public Page<PaymentDTO> findPaymentsBySearchCriteria(String cardNumber, String customerNumber,
+      Pageable pageable)
       throws Exception {
 
     if (StringUtils.isEmpty(customerNumber) && StringUtils.isEmpty(cardNumber)) {
@@ -203,12 +206,8 @@ public class PaymentServiceImp implements PaymentService {
     }
     List<Payment> paymentsFetched;
     try {
-      paymentsFetched = paymentRepository.findByCardNumberOrCustomerNumber(customerNumber,
-          cardNumber);
-      List<PaymentDTO> payments =paymentsFetched.stream()
-          .map(mapper::convertPaymentEntityToDTO)
-          .toList();
-      return payments;
+      return paymentRepository.findByCardNumberOrCustomerNumber(customerNumber,
+          cardNumber, pageable).map(mapper::convertPaymentEntityToDTO);
     } catch (Exception e) {
       LOGGER.error("Error occurred while fetching payment records from DB: ", e);
       throw new RecordsNotBeingFetchedException(
@@ -229,19 +228,15 @@ public class PaymentServiceImp implements PaymentService {
    *                                         records.
    */
   @Override
-  public List<PaymentDTO> getAllPaymentsbyDateInterval(LocalDate startDate, LocalDate endDate)
+  public Page<PaymentDTO> getAllPaymentsbyDateInterval(LocalDate startDate, LocalDate endDate,
+      Pageable pageable)
       throws Exception {
     List<Payment> paymentsFetched;
     try {
-      paymentsFetched = paymentRepository.getAllPaymentsBetweenDates(
-          convertToLocalDateTime(startDate),
-          convertToLocalDateTime(endDate));
-
-                               //=mapper. convertPaymentEntityToDTO(paymentsFetched);
-      List<PaymentDTO> payments = paymentsFetched.stream()
-          .map(mapper::convertPaymentEntityToDTO)
-          .toList();
-      return payments;
+      return paymentRepository.getAllPaymentsBetweenDates(
+              convertToLocalDateTime(startDate),
+              convertToLocalDateTime(endDate), pageable)
+          .map(mapper::convertPaymentEntityToDTO);
     } catch (Exception e) {
       LOGGER.error("Error occurred while fetching payment records from data base: ", e);
       throw new RecordsNotBeingFetchedException(

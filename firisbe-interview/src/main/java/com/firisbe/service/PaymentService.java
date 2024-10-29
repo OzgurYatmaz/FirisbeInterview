@@ -27,6 +27,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -79,7 +81,7 @@ public interface PaymentService {
 	 *
 	 * 
 	 */
-	public List<PaymentDTO> findPaymentsBySearchCriteria(String cardNumber, String customerNumber) throws Exception;
+	public Page<PaymentDTO> findPaymentsBySearchCriteria(String cardNumber, String customerNumber, Pageable pageable) throws Exception;
 
 	
 	/**
@@ -91,6 +93,6 @@ public interface PaymentService {
 	 *.
 	 *  
 	 */
-	public List<PaymentDTO> getAllPaymentsbyDateInterval(LocalDate startDate, LocalDate endDate) throws Exception;
+	public Page<PaymentDTO> getAllPaymentsbyDateInterval(LocalDate startDate, LocalDate endDate, Pageable pageable) throws Exception;
 
 }

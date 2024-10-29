@@ -231,7 +231,8 @@ class FirisbeInterviewApplicationUnitTests {
 	@DisplayName("Fetch by customerNumber")
 	@Order(5)
 	void findPaymentsByCustomerNumber() {
-		List<Payment> payments = paymentRepository.findByCardNumberOrCustomerNumber("114-1", null);
+		List<Payment> payments = paymentRepository.findByCardNumberOrCustomerNumber("114-1", null,
+        pageable);
 
 		assertNotNull(payments);
         assertEquals(2, payments.size());
@@ -249,7 +250,8 @@ class FirisbeInterviewApplicationUnitTests {
 	@DisplayName("Fetch by  CardNumber")
 	@Order(6)
 	void findPaymentsByCardNumber() {
-		List<Payment> payments = paymentRepository.findByCardNumberOrCustomerNumber(null, "571-1");
+		List<Payment> payments = paymentRepository.findByCardNumberOrCustomerNumber(null, "571-1",
+        pageable);
 
 		assertNotNull(payments);
         assertEquals(1, payments.size());
@@ -267,7 +269,8 @@ class FirisbeInterviewApplicationUnitTests {
 	@DisplayName("Fetch by customerNumber and CardNumber")
 	@Order(7)
 	void findPaymentsByCustomerNumberAndCardNumber() {
-		List<Payment> payments = paymentRepository.findByCardNumberOrCustomerNumber("114-1", "571-1");
+		List<Payment> payments = paymentRepository.findByCardNumberOrCustomerNumber("114-1", "571-1",
+        pageable);
 
 		assertNotNull(payments);
         assertEquals(1, payments.size());

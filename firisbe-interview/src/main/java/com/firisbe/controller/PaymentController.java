@@ -3,8 +3,8 @@
  */
 package com.firisbe.controller;
 
+import com.firisbe.service.PaymentService;
 import java.time.LocalDate;
-import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -16,11 +16,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 import com.firisbe.dto.PaymentDTO;
 import com.firisbe.dto.PaymentRequestDTO;
 import com.firisbe.error.ErrorDetails;
 import com.firisbe.error.RecordsNotBeingFetchedException;
-import com.firisbe.serviceimpl.PaymentServiceImp;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -55,7 +57,7 @@ public class PaymentController {
 	 * Payment related operations will be done with this
 	 */
 	@Autowired
-	public PaymentServiceImp paymentServiceImp;
+	public PaymentService paymentService;
 
 	/**
 	 * 
@@ -84,7 +86,7 @@ public class PaymentController {
 	@PostMapping("/make-payment")
 	public ResponseEntity<String> makePayment(@Valid @RequestBody PaymentRequestDTO paymentRequest) throws Exception {
 		try {
-			paymentServiceImp.processPayment(paymentRequest);
+			paymentService.processPayment(paymentRequest);
 			return ResponseEntity.status(HttpStatus.OK).body("Payment is made ");
 
 		} catch (Exception e) {
@@ -111,12 +113,10 @@ public class PaymentController {
 			@ApiResponse(responseCode = "500", description = "When error being occured during querying database", content = {
 					@Content(schema = @Schema(implementation = ErrorDetails.class)) }) })
 	@GetMapping("/fetch-payments")
-	public ResponseEntity<List<PaymentDTO>> getPaymentsBySearchCriteria(@RequestParam(required = false) String cardNumber,
-			@RequestParam(required = false) String customerNumber) throws Exception {
+	public Page<PaymentDTO> getPaymentsBySearchCriteria(@RequestParam(required = false) String cardNumber,
+			@RequestParam(required = false) String customerNumber, Pageable pageable) throws Exception {
 		try {
-			List<PaymentDTO> payments = paymentServiceImp.findPaymentsBySearchCriteria(cardNumber, customerNumber);
-			return ResponseEntity.ok(payments);
-
+			return paymentService.findPaymentsBySearchCriteria(cardNumber, customerNumber, pageable);
 		} catch (Exception e) {
 			throw e;
 		}
@@ -140,14 +140,12 @@ public class PaymentController {
 			@ApiResponse(responseCode = "500", description = "When error being occured during querying database", content = {
 					@Content(schema = @Schema(implementation = ErrorDetails.class)) }) })
 	@GetMapping("/fetch-payments-bydate")
-	public ResponseEntity<List<PaymentDTO>> getAllPaymentsbyDateInterval(
+	public Page<PaymentDTO> getAllPaymentsbyDateInterval(
 			@RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
-			@RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate)
+			@RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate, Pageable pageable)
 			throws Exception {
 		try {
-			List<PaymentDTO> payments = paymentServiceImp.getAllPaymentsbyDateInterval(startDate, endDate);
-			return ResponseEntity.ok(payments);
-
+			return paymentService.getAllPaymentsbyDateInterval(startDate, endDate, pageable);
 		} catch (Exception e) {
 			throw e;
 		}
