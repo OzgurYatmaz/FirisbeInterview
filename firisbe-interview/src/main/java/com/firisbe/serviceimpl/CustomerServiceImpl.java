@@ -77,9 +77,7 @@ public class CustomerServiceImpl implements CustomerService {
   @Override
 	public List<CustomerDTO> getAllCustomers() throws Exception {
 		try {
-			List<Customer> customersFetched = customerRepository.findAll();
-			List<CustomerDTO> customers = mapper.convertCustomerEntityToDTO(customersFetched);
-			return customers;
+			return customerRepository.findAll().stream().map(mapper::convertCustomerEntityToDTO).toList();
 		} catch (Exception e) {
 			LOGGER.error("Error occurred while retrieving customers", e);
 			throw new RecordsNotBeingFetchedException("Error occurred while retrieving customers!", e.getMessage());

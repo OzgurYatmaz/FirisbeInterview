@@ -29,22 +29,10 @@ public abstract class CustomerMapper {
    * @param entity object fetched from database.
    * @return DTO object for API return type.
    */
-  public List<CustomerDTO> convertCustomerEntityToDTO(List<Customer> customersFetched) {
-    if (!CollectionUtils.isEmpty(customersFetched)) {
-      List<CustomerDTO> customers = new ArrayList<CustomerDTO>();
-      for (Customer c : customersFetched) {
-        CustomerDTO tempCustomer = new CustomerDTO();
-        tempCustomer.setCustomerNumber(c.getCustomerNumber());
-        tempCustomer.setName(c.getName());
-        tempCustomer.setEmail(c.getEmail());
-        customers.add(tempCustomer);
-      }
-
-      return customers;
-
-    }
-    return null;
-  }
+  @Mapping(target = "name", source = "name")
+  @Mapping(target = "email", source = "email")
+  @Mapping(target = "customerNumber", source = "customerNumber")
+  public abstract CustomerDTO convertCustomerEntityToDTO(Customer customersFetched);
 
 
   /**
@@ -53,10 +41,6 @@ public abstract class CustomerMapper {
    * @param request body object for transmitting data in web.
    * @return customer entity object to be saved database by JPA.
    */
-//  @Mapping(target = "name", source = "name")
-//  @Mapping(target = "email", source = "email")
-//  @Mapping(target = "customerNumber", source = "customerNumber")
-//  @Mapping(target = "cards", source = "cards")
   public Customer convertDTO_To_Entity(AddCustomerRequestDTO addCustomerRequest) {
 
     Customer customer = new Customer();
