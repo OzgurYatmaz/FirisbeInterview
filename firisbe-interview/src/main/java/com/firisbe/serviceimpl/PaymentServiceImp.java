@@ -3,8 +3,12 @@
  */
 package com.firisbe.serviceimpl;
 
+import com.firisbe.entity.QPayment;
+import com.firisbe.filter.PaymentFilter;
 import com.firisbe.mapper.PaymentMapper;
 import com.firisbe.service.PaymentService;
+import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.Expressions;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -22,7 +26,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 
@@ -183,24 +186,28 @@ public class PaymentServiceImp implements PaymentService {
    * Fetches payment records with cutomerNumber or cardNumber or both. Both of the parameters are
    * optional
    *
-   * @param customerNumber if it is null it will be disregarded in repository.
-   * @param cardNumber    if it is null  it will be disregarded in repository.
+   * @param filter if it is null it will be disregarded in repository.
    * @throws RecordsNotBeingFetchedException if there is a failure in reaching database records.
    * @throws ParametersNotProvidedException  if both of the parameters are not supplied
    */
-  @SuppressWarnings("deprecation")
   @Override
-  public Page<PaymentDTO> findPaymentsBySearchCriteria(String cardNumber, String customerNumber,
+  public Page<PaymentDTO> findPaymentsBySearchCriteria(PaymentFilter filter,
       Pageable pageable)
       throws Exception {
 
-    if (StringUtils.isEmpty(customerNumber) && StringUtils.isEmpty(cardNumber)) {
-      throw new ParametersNotProvidedException("Both Arguments cannot be empty",
-          "Please provide cardNumber or customerNumber or both");
+    QPayment q = QPayment.payment;
+
+    BooleanExpression expression = Expressions.TRUE.isTrue();
+
+    if (filter.getCardNumber() != null && !filter.getCardNumber().isEmpty()) {
+      expression = expression.and(q.cardNumber.eq(filter.getCardNumber()));
     }
+    if (filter.getCustomerNumber() != null && !filter.getCustomerNumber().isEmpty()) {
+      expression = expression.and(q.customerNumber.eq(filter.getCustomerNumber()));
+    }
+
     try {
-      return paymentRepository.findByCardNumberOrCustomerNumber(customerNumber,
-          cardNumber, pageable).map(mapper::convertPaymentEntityToDTO);
+      return paymentRepository.findAll(expression, pageable).map(mapper::convertPaymentEntityToDTO);
     } catch (Exception e) {
       LOGGER.error("Error occurred while fetching payment records from DB: ", e);
       throw new RecordsNotBeingFetchedException(

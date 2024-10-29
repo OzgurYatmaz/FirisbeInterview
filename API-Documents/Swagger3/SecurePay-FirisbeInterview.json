@@ -160,19 +160,11 @@
         operationId: "getPaymentsBySearchCriteria",
         parameters: [
           {
-            name: "cardNumber",
+            name: "filter",
             in: "query",
-            required: false,
+            required: true,
             schema: {
-              type: "string"
-            }
-          },
-          {
-            name: "customerNumber",
-            in: "query",
-            required: false,
-            schema: {
-              type: "string"
+              $ref: "#/components/schemas/PaymentFilter"
             }
           },
           {
@@ -411,6 +403,17 @@
           }
         },
         description: "Card Model Information"
+      },
+      PaymentFilter: {
+        type: "object",
+        properties: {
+          cardNumber: {
+            type: "string"
+          },
+          customerNumber: {
+            type: "string"
+          }
+        }
       },
       Pageable: {
         type: "object",

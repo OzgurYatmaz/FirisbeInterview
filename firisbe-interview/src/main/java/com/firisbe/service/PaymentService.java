@@ -6,6 +6,7 @@ package com.firisbe.service;
 import com.firisbe.dto.PaymentDTO;
 import com.firisbe.dto.PaymentRequestDTO;
 import com.firisbe.error.ExternalServiceException;
+import com.firisbe.filter.PaymentFilter;
 import java.time.LocalDate;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -38,10 +39,8 @@ public interface PaymentService {
    * Fetches payment records with cutomerNumber or cardNumber or both. Both of the parameters are
    * optional
    *
-   * @param customerNumber if it is null it will be disregarded in repository.
-   * @param cardNumber     if it is null  it will be disregarded in repository.
    */
-  Page<PaymentDTO> findPaymentsBySearchCriteria(String cardNumber, String customerNumber,
+  Page<PaymentDTO> findPaymentsBySearchCriteria(PaymentFilter filter,
       Pageable pageable) throws Exception;
 
 

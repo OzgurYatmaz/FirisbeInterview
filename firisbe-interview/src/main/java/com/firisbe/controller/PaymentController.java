@@ -3,6 +3,7 @@
  */
 package com.firisbe.controller;
 
+import com.firisbe.filter.PaymentFilter;
 import com.firisbe.service.PaymentService;
 import java.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -99,8 +100,8 @@ public class PaymentController {
 	 * 
 	 * To query payments from database with two optional parameters
 	 * 
-	 * @param customerNumber
-	 * @param cardNumber.
+	 * @param filter
+	 * @param pageable
 	 * @return list of Payment objects
 	 * @throws RecordsNotBeingFetchedException exception with message explaining the
 	 *                                         error detail.
@@ -113,10 +114,9 @@ public class PaymentController {
 			@ApiResponse(responseCode = "500", description = "When error being occured during querying database", content = {
 					@Content(schema = @Schema(implementation = ErrorDetails.class)) }) })
 	@GetMapping("/fetch-payments")
-	public Page<PaymentDTO> getPaymentsBySearchCriteria(@RequestParam(required = false) String cardNumber,
-			@RequestParam(required = false) String customerNumber, Pageable pageable) throws Exception {
+	public Page<PaymentDTO> getPaymentsBySearchCriteria(PaymentFilter filter, Pageable pageable) throws Exception {
 		try {
-			return paymentService.findPaymentsBySearchCriteria(cardNumber, customerNumber, pageable);
+			return paymentService.findPaymentsBySearchCriteria(filter, pageable);
 		} catch (Exception e) {
 			throw e;
 		}
@@ -126,7 +126,7 @@ public class PaymentController {
 	 * 
 	 * To query payments from database with two compulsory parameters defining the date interval
 	 * 
-	 * @param sartDate format: YYYY-MM-DD example: 2024-04-27
+	 * @param startDate format: YYYY-MM-DD example: 2024-04-27
 	 * @param endDate  format: YYYY-MM-DD example: 2024-04-28
 	 * @return list of Payment objects
 	 * @throws RecordsNotBeingFetchedException exception with message explaining the

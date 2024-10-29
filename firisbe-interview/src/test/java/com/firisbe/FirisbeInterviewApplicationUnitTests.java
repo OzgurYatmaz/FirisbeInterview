@@ -30,6 +30,7 @@ import com.firisbe.repository.PaymentRepository;
 import com.firisbe.service.CustomerService;
 import com.firisbe.serviceimpl.PaymentServiceImp;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -88,6 +89,8 @@ class FirisbeInterviewApplicationUnitTests {
 	@Autowired
 	private PaymentServiceImp paymentServiceImp;
 
+	@Autowired
+  private Pageable pageable;
 
 	/**
 	 * 

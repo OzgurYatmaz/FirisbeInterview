@@ -69,6 +69,22 @@
       <artifactId>mapstruct-processor</artifactId>
       <version>1.6.2</version>
     </dependency>
+    <!-- QueryDSL JPA dependency -->
+    <dependency>
+      <groupId>com.querydsl</groupId>
+      <artifactId>querydsl-jpa</artifactId>
+      <version>5.1.0</version>
+    </dependency>
+
+    <!-- QueryDSL annotation processor -->
+    <dependency>
+      <groupId>com.querydsl</groupId>
+      <artifactId>querydsl-apt</artifactId>
+      <version>5.1.0</version>
+      <scope>provided</scope>
+      <classifier>jakarta</classifier>
+    </dependency>
+
 
   </dependencies>
   <build>
@@ -93,6 +109,7 @@
           <!--					<testFailureIgnore>true</testFailureIgnore>-->
         </configuration>
       </plugin>
+
     </plugins>
   </build>
 </project>
