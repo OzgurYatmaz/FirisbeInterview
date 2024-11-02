@@ -39,6 +39,10 @@ The improved version of the project is [here](https://github.com/OzgurYatmaz/Mul
 
 1. [Test Reports Tools and More](API-Documents)
 
+### H2 Embedded DB
+1. To monitor data in data base use the url: <br>
+   http://localhost:8080/h2-console/  and use the credentials at [prop file](firisbe-interview/src/main/resources/application-dev.properties)
+
 ### Tech Stack:
 
 - Language: Java 17
